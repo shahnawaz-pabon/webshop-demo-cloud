@@ -4,7 +4,7 @@ import { NavigationItemsComponent } from './navigation-items/navigation-items.co
 import { NgClass, NgIf, NgStyle, Location } from '@angular/common';
 import { BackArrowIconComponent } from '../../../shared/components/icons/back-arrow-icon/back-arrow-icon.component';
 import { RouterLink, Router } from '@angular/router';
-import { WindowUtils } from '../../../utils/window.utils';
+import { WindowUtils } from '../../../shared/utils/window.utils';
 
 @Component({
   selector: 'app-header',
