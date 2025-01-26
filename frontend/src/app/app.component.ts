@@ -4,7 +4,7 @@ import { HeaderComponent } from './shared/components/header/header.component';
 import { LoaderComponent } from './shared/components/animations/loader/loader.component';
 import { NgIf } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { WindowUtils } from './utils/window.utils';
+import { WindowUtils } from './shared/utils/window.utils';
 
 @Component({
   selector: 'app-root',

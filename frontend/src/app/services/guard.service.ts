@@ -1,24 +1,38 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { RestService } from './rest.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GuardService {
-    private subscriptions: Subscription[] = [];
+    private outsideSubscriptions: Subscription[] = [];
 
-    constructor() { }
+    constructor(private restService: RestService) { }
 
     canActivate(route: ActivatedRouteSnapshot): boolean {
         return true; // Add your guard logic here
     }
 
-    addSubscriptionFromOutside(subscription: Subscription): void {
-        this.subscriptions.push(subscription);
+    loadProducts(page: number, isAdmin: boolean): Observable<any> {
+        const requestObservable = this.restService.getProductRequestBuilder().getProducts(page);
+        const responseHandler = this.restService.getProductResponseHandler();
+
+        requestObservable.subscribe({
+            next: (response) => responseHandler.getProducts_OK(response),
+            error: (error) => responseHandler.getProducts_ERROR(error)
+        });
+
+        return requestObservable;
     }
 
-    ngOnDestroy(): void {
-        this.subscriptions.forEach(sub => sub.unsubscribe());
+    addSubscriptionFromOutside(subscription: Subscription): void {
+        this.outsideSubscriptions.push(subscription);
+    }
+
+    clearSubscriptions(): void {
+        this.outsideSubscriptions.forEach(sub => sub.unsubscribe());
+        this.outsideSubscriptions = [];
     }
 } 

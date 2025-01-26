@@ -3,7 +3,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 import { AppStateService } from '../../../services/app-state.service';
-import { WindowUtils } from '../../../shared/utils/window.utils';
+import { WindowUtils } from '../../utils/window.utils';
 
 @Component({
   selector: 'app-general-error',

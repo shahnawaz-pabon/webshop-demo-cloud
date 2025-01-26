@@ -13,7 +13,7 @@ import {
     loadProductDetailComponentLazily,
     loadProductListComponentLazily,
     loadSignupComponentLazily
-} from "./utils/lazy-loading.utils";
+} from "./shared/utils/lazy-loading.utils";
 
 //function guards
 const canActivateGuard = (route: ActivatedRouteSnapshot) => inject(GuardService).canActivate(route);
