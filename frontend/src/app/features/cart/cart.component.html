@@ -1,0 +1,17 @@
+<div class="cart-container">
+    <h1>Your Cart</h1>
+    <div class="cart-item" *ngFor="let item of cart">
+        <img [src]="item.product.imageUrl" alt="{{ item.product.title }}" />
+        <div class="item-details">
+            <h2>{{ item.product.title }}</h2>
+            <p class="summary">{{ item.product.summary }}</p>
+            <p>Quantity: {{ item.quantity }}</p>
+            <p>Price: ${{ item.product.price }}</p>
+            <p>Total: ${{ item.totalPrice }}</p>
+        </div>
+    </div>
+    <div class="cart-total">
+        <h3>Total Price: ${{ totalPrice }}</h3>
+    </div>
+    <button (click)="handleBuyProducts()">Buy Products</button>
+</div>
