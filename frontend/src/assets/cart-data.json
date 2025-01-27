@@ -1,0 +1,31 @@
+{
+    "cart": [
+      {
+        "product": {
+          "productId": 207,
+          "title": "Assassin's Creed III Remastered",
+          "summary": "PEGI 18",
+          "price": 15.89,
+          "description": "Command powerful tools, traverse breathtaking scenery, face adversaries, and make impactful decisions in worlds full of possibilities. Customize your character and gear, and embark on quests, forging destinies in vast worlds with diverse terrains and hidden secrets. Prepare for excitement, navigate captivating landscapes, and gather allies to shape fates together.",
+          "imageUrl": "https://firebasestorage.googleapis.com/v0/b/ecommerce-angular-9227e.appspot.com/o/product-images%2Fe1cc4950-d1f2-4855-a45a-8c3586b1e834_2.AC-3.jpg?alt=media&token=361d0319-0709-4749-89c8-1457be16fb58"
+        },
+        "quantity": 1,
+        "totalPrice": 15.89
+      },
+      {
+        "product": {
+          "productId": 206,
+          "title": "Assassin's Creed Valhalla",
+          "summary": "PEGI 18",
+          "price": 39.5,
+          "description": "Experience the thrill of discovery in worlds teeming with possibilities, diving into action-packed gameplay where strategy and skill reign. Customize characters, gear, and set forth on epic journeys, conquering diverse terrains and uncovering ancient secrets. Join allies or venture solo in epic quests, with risks and rewards awaiting at every turn.",
+          "imageUrl": "https://firebasestorage.googleapis.com/v0/b/ecommerce-angular-9227e.appspot.com/o/product-images%2F27190c55-8e6b-49ec-89fc-1280b4339fe4_3.AC-valhalla.jpg?alt=media&token=4bcb93a8-bd9b-43e3-ae6b-25dc3fe6dd52"
+        },
+        "quantity": 2,
+        "totalPrice": 79.0
+      }
+    ],
+    "totalPrice": 94.89,
+    "totalLength": 3
+  }
+  
