@@ -1,0 +1,16 @@
+<nav class="pagination" *ngIf="maxPage > 1">
+    <ul>
+        <li>
+            <a [routerLink]="[]" [queryParams]="getPageQueryParam(1)" 
+               [class.active]="currentPage === 1">1</a>
+        </li>
+
+        <li *ngFor="let page of getArrayOfPages(); let i = index">
+            <a [routerLink]="[]" 
+               [queryParams]="getPageQueryParam(i + 2)"
+               [class.active]="currentPage === i + 2">
+                {{ i + 2 }}
+            </a>
+        </li>
+    </ul>
+</nav>

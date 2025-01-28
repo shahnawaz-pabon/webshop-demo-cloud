@@ -1,0 +1,23 @@
+<section class="product-list">
+  <h1>{{ title }}</h1>
+
+  <div *ngIf="appState.getProductList().length > 0">
+    <ul class="products-grid">
+      <li *ngFor="let product of appState.getProductList()">
+        <app-product-item [product]="product"></app-product-item>
+      </li>
+    </ul>
+    
+    <app-pagination></app-pagination>
+  </div>
+
+  <div *ngIf="appState.getProductList().length === 0" class="no-products">
+    <p>No products available.</p>
+  </div>
+
+  <a *ngIf="appState.isUserAdmin()" 
+     [routerLink]="['/products/new']" 
+     class="add-product-button">
+    Add New Product
+  </a>
+</section>

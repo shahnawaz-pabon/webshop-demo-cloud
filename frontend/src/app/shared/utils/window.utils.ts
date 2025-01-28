@@ -6,8 +6,6 @@ export class WindowUtils {
     }
 
     static scrollTop(): void {
-        if (typeof window !== 'undefined') {
-            window.scrollTo(0, 0);
-        }
+        window.scrollTo(0, 0);
     }
 } 

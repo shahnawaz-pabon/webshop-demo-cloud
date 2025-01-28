@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { Product } from '../model/product.model';
 
 @Injectable({
     providedIn: 'root'
@@ -15,8 +16,11 @@ export class AppStateService {
 
     controlLoading = new Subject<boolean>();
     controlCartRecovery = new Subject<number>();
+    controlPagination = new Subject<{ maxPage: number, currentPage: number }>();
 
     private initDone = true;
+    private productsTotalCount: number = 0;
+    private productList: Product[] = [];
 
     constructor() {
         // Initialize the app state
@@ -57,7 +61,8 @@ export class AppStateService {
     }
 
     isUserAdmin(): boolean {
-        return this.userAdmin;
+        // Implement your admin check logic here
+        return false;
     }
 
     setUserAdmin(admin: boolean): void {
@@ -80,5 +85,21 @@ export class AppStateService {
             cartLength: this.cartLength,
             initDone: this.initDone
         });
+    }
+
+    getProductsTotalCount(): number {
+        return this.productsTotalCount;
+    }
+
+    getProductList(): Product[] {
+        return this.productList;
+    }
+
+    setProductList(products: Product[]): void {
+        this.productList = products;
+    }
+
+    setProductsTotalCount(count: number): void {
+        this.productsTotalCount = count;
     }
 } 
