@@ -24,7 +24,7 @@ export class CartComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.stripePromise = loadStripe(this.stripePublicKey); // Replace with your Stripe public key
+    this.stripePromise = loadStripe(this.stripePublicKey);
   }
 
   ngOnInit(): void {
