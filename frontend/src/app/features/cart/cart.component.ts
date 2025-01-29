@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
+import { env } from '../../../environments/env';
 
 @Component({
   selector: 'app-cart',
@@ -15,13 +16,15 @@ export class CartComponent implements OnInit {
   cart: any[] = [];
   totalPrice: number = 0;
   private stripePromise: Promise<Stripe | null>;
+  private stripePublicKey = env.STRIPE_PUBLIC_KEY;
+  private stripeSecretKey = env.STRIPE_SECRET_KEY;
 
   constructor(
     private cartService: CartService,
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.stripePromise = loadStripe('pk_test_f3duw0VsAEM2TJFMtWQ90QAT'); // Replace with your Stripe public key
+    this.stripePromise = loadStripe(this.stripePublicKey);
   }
 
   ngOnInit(): void {
@@ -76,7 +79,7 @@ export class CartComponent implements OnInit {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Bearer sk_test_Y17KokhC3SRYCQTLYiU5ZCD2`,
+          Authorization: `Bearer ${this.stripeSecretKey}`,
         },
         body: body,
       }).then((res) => res.json());

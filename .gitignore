@@ -39,3 +39,7 @@ temp/
 .idea/
 *.iml
 .vscode/
+
+# exclude generated env.ts and .env files
+env.ts
+.env
