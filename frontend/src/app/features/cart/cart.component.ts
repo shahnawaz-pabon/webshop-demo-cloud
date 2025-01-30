@@ -5,8 +5,9 @@ import { CommonModule } from '@angular/common';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { environment as env } from '../../../environments/env';
 import { CartItemComponent } from './cart-item/cart-item.component';
-import { CartItem } from '../../model/cart-item.model';
-import { Product } from '../../model/product.model';
+import { CartItem } from '../../model/interfaces/cart-item.interface';
+import { Product } from '../../model/interfaces/product.interface';
+import { ShoppingCart } from '../../model/interfaces/shopping-cart.interface';
 
 @Component({
   selector: 'app-cart',
@@ -32,24 +33,10 @@ export class CartComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Fetch the cart data from the service
-    this.cartService.getCart().subscribe((data) => {
-      this.cart = data.cart.map((item: { product: any, quantity: number, totalPrice: number }) => 
-        new CartItem(
-          new Product(
-            item.product.productId,
-            item.product.title,
-            item.product.summary,
-            item.product.price,
-            item.product.description,
-            item.product.imageUrl
-          ),
-          item.quantity,
-          item.totalPrice
-        )
-      );
+    this.cartService.getCart().subscribe((data: ShoppingCart) => {
+      this.cart = data.cart;
       this.totalPrice = data.totalPrice;
-      this.totalLength = data.totalLength;
+      this.totalLength = data.totalLength || 0;
       console.log('Cart data:', this.cart);
     });
 
@@ -75,10 +62,10 @@ export class CartComponent implements OnInit {
     const lineItems: Record<string, string>[] = this.cart.map((item, index) => {
       return {
         [`line_items[${index}][price_data][currency]`]: 'usd',
-        [`line_items[${index}][price_data][product_data][name]`]: item.getProduct().getTitle(),
-        [`line_items[${index}][price_data][product_data][images][0]`]: item.getProduct().getImageUrl() || '',
-        [`line_items[${index}][price_data][unit_amount]`]: Math.round(item.getProduct().getPrice() * 100).toString(), // Convert to string
-        [`line_items[${index}][quantity]`]: item.getQuantity().toString(),
+        [`line_items[${index}][price_data][product_data][name]`]: item.product.title,
+        [`line_items[${index}][price_data][product_data][images][0]`]: item.product.imageUrl || '',
+        [`line_items[${index}][price_data][unit_amount]`]: Math.round(item.product.price * 100).toString(),
+        [`line_items[${index}][quantity]`]: item.quantity.toString(),
       };
     });
   

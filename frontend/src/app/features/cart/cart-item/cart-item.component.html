@@ -1,20 +1,20 @@
 <article 
     #cartItemRef
     class="cart-item" 
-    [attr.data-product-id]="cartItem.getProduct().getProductId()">
+    [attr.data-product-id]="cartItem.product.productId">
 
         <div class="product-img">
-            <a [routerLink]="['/products', cartItem.getProduct().getProductId()]">
-                <img [src]="cartItem.getProduct().getImageUrl()">
+            <a [routerLink]="['/products', cartItem.product.productId]">
+                <img [src]="cartItem.product.imageUrl">
             </a>
         </div>
         
         <div class="cart-item-control">
             <div class="cart-item-info">
-                <h2>{{ cartItem.getProduct().getTitle() }}</h2>
+                <h2>{{ cartItem.product.title }}</h2>
                 <p>
-                    <span class="cart-item-price">{{ cartItem.getTotalPrice() | formatPrice }}</span>
-                    ( <span class="cart-product-price">{{ cartItem.getProduct().getPrice() | formatPrice }}</span> )
+                    <span class="cart-item-price">{{ cartItem.totalPrice | formatPrice }}</span>
+                    ( <span class="cart-product-price">{{ cartItem.product.price | formatPrice }}</span> )
                 </p>
             </div>
     
@@ -23,9 +23,9 @@
                     <input 
                         #quantityRef
                         type="number" 
-                        [value]="cartItem.getQuantity().toString()">
+                        [value]="cartItem.quantity">
                     <span class="cart-item-quantity">x
-                        <span>{{ cartItem.getQuantity() }}</span>
+                        <span>{{ cartItem.quantity }}</span>
                     </span>
                 </p>
                 <p class="cart-item-actions">

@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AppStateService } from '../../../services/app-state.service';
 import { RestService } from '../../../services/rest.service';
-import { CartItem } from '../../../model/cart-item.model';
+import { CartItem } from '../../../model/interfaces/cart-item.interface';
 import { FormatPricePipe } from '../../../pipes/format-price.pipe';
 import { CommonModule } from '@angular/common';
 
