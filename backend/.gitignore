@@ -1,0 +1,107 @@
+# Ignore all log files
+*.log
+
+# Ignore IDE-specific files
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+*.swp
+*.swo
+
+# Ignore build and dependency directories
+/target/
+/build/
+/out/
+/bin/
+/dist/
+*.jar
+*.war
+*.ear
+*.zip
+*.tar
+*.tar.gz
+
+# Ignore Maven-specific files
+.mvn/
+mvnw
+mvnw.cmd
+.mvn/wrapper/
+
+# Ignore Gradle-specific files
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+build/
+
+# Ignore dependency directories (if not using Maven/Gradle)
+/lib/
+/libs/
+
+# Ignore local configuration files
+application-local.properties
+application-local.yml
+*.env
+
+# Ignore test reports and logs
+/test-output/
+/test-results/
+/test-reports/
+*.log
+
+# Ignore Mac OS-specific files
+.DS_Store
+
+# Ignore Windows-specific files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Ignore Node.js and frontend files (if applicable)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Ignore Docker-specific files
+docker-compose.override.yml
+docker-compose.env
+
+# Ignore other temporary files
+*.tmp
+*.bak
+*.patch
+*.diff
+*.orig
+*.rej
+*.class
+*.log
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite
+*.sql
+*.cache
+*.lock
+*.pid
+*.seed
+*.pid.lock
+*.sock
+*.tsbuildinfo
+
+# Ignore Spring Boot specific files
+spring-boot-devtools.properties
+spring-boot-devtools.yaml
+spring-boot-devtools.yml
+
+# Ignore Flyway/Liquibase migration files (if applicable)
+/flyway/
+/liquibase/
