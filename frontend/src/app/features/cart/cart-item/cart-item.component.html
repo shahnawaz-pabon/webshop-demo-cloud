@@ -1,0 +1,38 @@
+<article 
+    #cartItemRef
+    class="cart-item" 
+    [attr.data-product-id]="cartItem.product.productId">
+
+        <div class="product-img">
+            <a [routerLink]="['/products', cartItem.product.productId]">
+                <img [src]="cartItem.product.imageUrl">
+            </a>
+        </div>
+        
+        <div class="cart-item-control">
+            <div class="cart-item-info">
+                <h2>{{ cartItem.product.title }}</h2>
+                <p>
+                    <span class="cart-item-price">{{ cartItem.totalPrice | formatPrice }}</span>
+                    ( <span class="cart-product-price">{{ cartItem.product.price | formatPrice }}</span> )
+                </p>
+            </div>
+    
+            <div class="cart-item-management">
+                <p>
+                    <input 
+                        #quantityRef
+                        type="number" 
+                        [value]="cartItem.quantity">
+                    <span class="cart-item-quantity">x
+                        <span>{{ cartItem.quantity }}</span>
+                    </span>
+                </p>
+                <p class="cart-item-actions">
+                    <button class="btn btn-alt" (click)="saveCartItem('no')">Update</button>
+                    <button class="btn btn-alt cart-item-delete" (click)="deleteCartItem()">X</button>
+                </p>
+            </div>
+        </div>
+
+</article>
