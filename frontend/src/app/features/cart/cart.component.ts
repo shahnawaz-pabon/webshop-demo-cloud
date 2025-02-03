@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
-import { environment as env } from '../../../environments/env';
+import { env } from '../../../environments/env';
 import { CartItemComponent } from './cart-item/cart-item.component';
 import { CartItem } from '../../model/interfaces/cart-item.interface';
 import { Product } from '../../model/interfaces/product.interface';
@@ -52,12 +52,12 @@ export class CartComponent implements OnInit {
 
   async handleBuyProducts(): Promise<void> {
     const stripe = await this.stripePromise;
-  
+
     if (!stripe) {
       console.error('Stripe.js failed to load');
       return;
     }
-  
+
     // Validate and construct the line_items array
     const lineItems: Record<string, string>[] = this.cart.map((item, index) => {
       return {
@@ -68,7 +68,7 @@ export class CartComponent implements OnInit {
         [`line_items[${index}][quantity]`]: item.quantity.toString(),
       };
     });
-  
+
     // Flatten the array into a single object for URLSearchParams
     const sessionData = {
       cancel_url: `${window.location.origin}/cart?payment=cancel`,
@@ -77,10 +77,10 @@ export class CartComponent implements OnInit {
       "payment_method_types[]": "card",
       ...Object.assign({}, ...lineItems), // Merge line items into session data
     };
-  
+
     try {
       const body = new URLSearchParams(sessionData).toString();
-  
+
       const session = await fetch('https://api.stripe.com/v1/checkout/sessions', {
         method: 'POST',
         headers: {
@@ -89,7 +89,7 @@ export class CartComponent implements OnInit {
         },
         body: body,
       }).then((res) => res.json());
-  
+
       if (session.url) {
         // Redirect to the Stripe Checkout URL
         window.location.href = session.url;
