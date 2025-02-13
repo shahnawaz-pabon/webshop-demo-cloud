@@ -1,7 +1,12 @@
 # Stage 1: Build the application
 FROM maven:3.8.5-eclipse-temurin-17 AS builder
 WORKDIR /app
+
+# Copy only pom.xml first to leverage Docker cache for dependencies
 COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Now copy the actual source code and build the project
 COPY src ./src
 RUN mvn clean install -DskipTests
 

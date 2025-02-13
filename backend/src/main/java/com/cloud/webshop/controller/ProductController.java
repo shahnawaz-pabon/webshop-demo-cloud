@@ -24,6 +24,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @CrossOrigin
     @GetMapping("/list")
     @Operation(
             summary = "Get all products",
