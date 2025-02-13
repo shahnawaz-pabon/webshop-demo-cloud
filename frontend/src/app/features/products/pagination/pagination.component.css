@@ -63,3 +63,50 @@
 .pagination a:hover:not(.active) {
   background: #3a3a3a;
 }
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.pagination button {
+  background: none;
+  border: none;
+  color: #ffa500;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination ul {
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.pagination a {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #2a2a2a;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  min-width: 2.5rem;
+  text-align: center;
+}
+
+.pagination a.active {
+  background: #ffa500;
+  color: #000;
+}
+
+.pagination a:hover:not(.active) {
+  background: #3a3a3a;
+}

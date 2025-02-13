@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from '../model/product.model';
 import { AppStateService } from '../services/app-state.service';
 import { environment } from '../../environments/environment';
 import { PaginationUtils } from '../shared/utils/pagination.utils';
+import { ActivatedRoute } from '@angular/router';
+
 
 interface ProductRequestBuilder {
     getProducts: (page: number, size?: number) => Observable<HttpResponse<any>>;
@@ -24,7 +26,12 @@ interface ProductResponseHandler {
 export class RestService {
     private baseUrl = environment.apiBaseUrl;
 
-    constructor(private http: HttpClient, private appState: AppStateService) { }
+    constructor(
+        private http: HttpClient,
+        private appState: AppStateService,
+        private activatedRoute: ActivatedRoute,
+
+    ) { }
 
     getAuthRequestBuilder() {
         return {
@@ -66,10 +73,9 @@ export class RestService {
 
     getProductRequestBuilder(): ProductRequestBuilder {
         return {
-            getProducts: (page: number, size: number = 8): Observable<HttpResponse<any>> => {
-                const offset = (page - 1) * size;
+            getProducts: (page: number, size: number = 10): Observable<HttpResponse<any>> => {
                 return this.http.get<any>(
-                    `${this.baseUrl}/products?offset=${offset}&content=${size}`,
+                    `${this.baseUrl}/product/list?page=${page}&size=${size}`,
                     {
                         observe: 'response',
                         headers: { 'Accept': 'application/json' }
@@ -84,7 +90,7 @@ export class RestService {
     getProductResponseHandler(): ProductResponseHandler {
         return {
             getProducts_OK: (response: HttpResponse<any>) => {
-                const products = response.body.map((item: any) =>
+                const products = response.body.data.map((item: any) =>
                     new Product(
                         item.productId,
                         item.title,
@@ -99,7 +105,7 @@ export class RestService {
                 this.appState.setProductsTotalCount(24); // This will show 3 pages with 8 items each
 
                 // Trigger pagination update
-                const currentPage = 1; // Get this from your current state
+                const currentPage = 0; // Get this from your current state
                 PaginationUtils.emitPaginationConfig(
                     currentPage,
                     this.appState.getProductsTotalCount(),
@@ -110,7 +116,17 @@ export class RestService {
                 console.error('Failed to fetch products:', error);
             },
             deleteProductById_OK: (response) => { },
-            deleteProductById_ERROR: (error) => { }
+            deleteProductById_ERROR: (error: any) => { }
         };
     }
+
+    getProducts(page: number, itemsPerPage: number): Observable<Product[]> {
+        const params = new HttpParams()
+            .set('page', page.toString())
+            .set('size', itemsPerPage.toString());
+
+        return this.http.get<Product[]>(`${this.baseUrl}/product/list`, { params });
+    }
+
+
 } 

@@ -1,4 +1,6 @@
 <nav class="pagination" *ngIf="maxPage > 1">
+    <button (click)="onPreviousPage()" [disabled]="currentPage === 1">&lt;</button>
+  
     <ul>
         <li>
             <a [routerLink]="[]" [queryParams]="getPageQueryParam(1)" 
@@ -13,4 +15,5 @@
             </a>
         </li>
     </ul>
+    <button (click)="onNextPage()" [disabled]="currentPage === maxPage">&gt;</button>
 </nav>

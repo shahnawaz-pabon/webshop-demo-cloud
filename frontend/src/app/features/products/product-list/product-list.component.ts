@@ -42,9 +42,10 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.setTitles();
 
     // load initial products (page 1)
-    const productSub = this.guardService.loadProducts(1, this.appState.isUserAdmin()).subscribe({
+    const productSub = this.guardService.loadProducts(0, this.appState.isUserAdmin()).subscribe({
       next: (response) => {
-        console.log('Products loaded:', this.appState.getProductList()); // Debug log
+        console.log('Full response:', response); // Log the full response
+        this.handleResponse(response.body);
       },
       error: (error) => {
         console.error('Error loading products:', error);
@@ -90,6 +91,16 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  handleResponse(response: any) {
+    const totalPages = response.totalPages;
+    const currentPage = response.page;
+    console.log('Total pages: ki eikhan theke set hoitese');
+    this.appState.controlPagination.next({
+      maxPage: totalPages,
+      currentPage: currentPage
+    });
   }
 
 }
