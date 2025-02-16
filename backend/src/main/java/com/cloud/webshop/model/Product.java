@@ -30,4 +30,9 @@ public class Product {
 
     @Column(name = "image_url")
     private String imageUrl;
+
+    //Relation
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true)
+    @JoinColumn(name = "inventory_id", referencedColumnName = "product_id")
+    private INVENTORY inventory;
 }
