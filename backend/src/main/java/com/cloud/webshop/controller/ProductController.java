@@ -58,5 +58,22 @@ public class ProductController {
 
         return ResponseEntity.ok(response);
     }
+    @CrossOrigin
+    @GetMapping("/{id}")
+    @Operation(
+        summary = "Get product by ID",
+        description = "Retrieve a specific product by its ID."
+    )
+        public ResponseEntity<ApiResponse<ProductResponse>> getProductById(@PathVariable Long id) {
+        Product product = productService.getProductById(id);
+        ProductResponse productResponse = ProductResponse.toProductResponse(product);
 
+        ApiResponse<ProductResponse> response = new ApiResponse<>(
+                "success",
+                "Product retrieved successfully",
+                productResponse
+        );
+
+        return ResponseEntity.ok(response);
+    }
 }
