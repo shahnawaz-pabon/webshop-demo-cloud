@@ -17,5 +17,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Page<Product> getAllProducts(Pageable pageable) {
         return productRepository.findAll(pageable);
+
+    }
+    @Override
+    public Product getProductById(Long id) {
+        return productRepository.findById(id);
     }
 }
+
