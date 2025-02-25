@@ -10,6 +10,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Allow access to Swagger UI and API docs
                         .requestMatchers(
@@ -17,7 +18,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs",
                                 "/v3/api-docs/**",
-                                "/api/v1/**"
+                                "/api/**"
                         ).permitAll() // Allow unauthenticated access to Swagger UI
                         .anyRequest().authenticated() // Secure all other endpoints
                 );
