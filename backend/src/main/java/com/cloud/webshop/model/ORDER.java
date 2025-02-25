@@ -3,30 +3,31 @@ package com.cloud.webshop.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
-public class ORDER {
+@Table(name = "`Order`")
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
-    private int orderId;
+    @Column(name = "order_id", nullable = false)
+    private Long orderId;
 
-    @Column(name = "user_id")
-    private int userId;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Column(name = "order_date")
-    private Date orderDate;
+    private LocalDateTime orderDate;
 
-    @Column(name = "total_amount")
-    private double totalAmount;
+    @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalAmount;
 
-    @Column(name = "payment_status")
+    @Column(name = "payment_status", length = 50)
     private String paymentStatus;
 
-    //Relation
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_id")
-    private PRODUCT product;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderProduct> orderProducts;
 }
