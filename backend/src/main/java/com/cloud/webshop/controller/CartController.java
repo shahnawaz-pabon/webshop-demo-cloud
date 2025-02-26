@@ -3,6 +3,7 @@ package com.cloud.webshop.controller;
 import com.cloud.webshop.request.AddToCartRequest;
 import com.cloud.webshop.response.ApiResponse;
 import com.cloud.webshop.response.CartItemResponse;
+import com.cloud.webshop.response.CartListResponse;
 import com.cloud.webshop.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,6 +31,18 @@ public class CartController {
                 "success",
                 "Product added successfully to the cart",
                 cartItemResponse
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<ApiResponse<CartListResponse>> getCartList(@RequestParam Long userId) {
+        CartListResponse cartListResponse = cartService.getCartList(userId);
+
+        ApiResponse<CartListResponse> response = new ApiResponse<>(
+                "success",
+                "Cart List",
+                cartListResponse
         );
         return ResponseEntity.ok(response);
     }

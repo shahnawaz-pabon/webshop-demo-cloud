@@ -6,11 +6,14 @@ import com.cloud.webshop.repository.CartRepository;
 import com.cloud.webshop.repository.ProductRepository;
 import com.cloud.webshop.request.AddToCartRequest;
 import com.cloud.webshop.response.CartItemResponse;
+import com.cloud.webshop.response.CartListResponse;
 import com.cloud.webshop.response.ProductResponse;
 import com.cloud.webshop.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -59,5 +62,29 @@ public class CartServiceImpl implements CartService {
         cartItemResponse.setTotalPrice(product.getPrice().doubleValue() * quantity);
 
         return cartItemResponse;
+    }
+
+    public CartListResponse getCartList(Long userId) {
+        List<Cart> cartItems = cartRepository.findByUserId(userId);
+
+        List<CartItemResponse> cartItemResponses = new ArrayList<>();
+        double totalPrice = 0;
+        int totalLength = 0;
+
+        for (Cart cartItem : cartItems) {
+            Product product = cartItem.getProduct();
+            CartItemResponse cartItemResponse = buildCartItemResponse(product, cartItem.getQuantity());
+            cartItemResponses.add(cartItemResponse);
+
+            totalPrice += cartItemResponse.getTotalPrice();
+            totalLength += cartItem.getQuantity();
+        }
+
+        CartListResponse response = new CartListResponse();
+        response.setCart(cartItemResponses);
+        response.setTotalPrice(totalPrice);
+        response.setTotalLength(totalLength);
+
+        return response;
     }
 }
