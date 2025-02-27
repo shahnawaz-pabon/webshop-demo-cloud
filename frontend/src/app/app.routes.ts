@@ -6,7 +6,7 @@ import {
     loadAccountComponentLazily,
     loadCartComponentLazily,
     loadGeneralErrorComponentLazily,
-    loadHandleProductComponentLazily,
+    loadProductAddComponentLazily,
     loadLoginComponentLazily,
     loadOrdersComponentLazily,
     loadPaymentResultComponentLazily,
@@ -38,7 +38,7 @@ export const appRoutes: Routes = [
 
             {
                 path: 'new',
-                loadComponent: loadHandleProductComponentLazily,
+                loadComponent: loadProductAddComponentLazily,
                 canActivate: [canActivateGuard],
                 data: { id: RouteEnum.addNewProduct }
             },
@@ -55,7 +55,7 @@ export const appRoutes: Routes = [
 
                     {
                         path: 'edit',
-                        loadComponent: loadHandleProductComponentLazily,
+                        loadComponent: loadProductAddComponentLazily,
                         canActivate: [canActivateGuard],
                         data: { id: RouteEnum.editOneProduct }
                     }

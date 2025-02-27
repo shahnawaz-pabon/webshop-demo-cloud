@@ -7,6 +7,10 @@
         </button>
     </li>
 
+    <li>
+        <a routerLink="/products/new" (click)="closeMobileMenu()">Add Product</a>
+    </li>
+
     <li *ngIf="!appState.isUserAdmin()">
         <a routerLink="/" (click)="closeMobileMenu()">
             Shop
