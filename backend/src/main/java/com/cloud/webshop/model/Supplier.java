@@ -20,6 +20,6 @@ public class Supplier {
     @Column(name = "contact_info", length = 255)
     private String contactInfo;
 
-    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Inventory> inventories;
 }

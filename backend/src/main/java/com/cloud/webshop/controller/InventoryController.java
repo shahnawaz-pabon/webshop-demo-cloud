@@ -2,6 +2,7 @@ package com.cloud.webshop.controller;
 
 import com.cloud.webshop.model.Inventory;
 import com.cloud.webshop.model.Product;
+import com.cloud.webshop.request.InventoryRequest;
 import com.cloud.webshop.response.ApiResponse;
 import com.cloud.webshop.response.InventoryResponse;
 import com.cloud.webshop.response.ProductResponse;
@@ -78,16 +79,16 @@ public class InventoryController {
 
     @PostMapping("/create")
     @Operation(
-            summary = "Create a product's inventory",
-            description = "Create product's inventory"
+            summary = "Create or update a product's inventory",
+            description = "Create or update a product's inventory"
     )
-    public ResponseEntity<ApiResponse<InventoryResponse>> createInventory(@RequestBody Inventory inventory) {
-        InventoryResponse createdInventory = inventoryService.createInventory(inventory);
+    public ResponseEntity<ApiResponse<InventoryResponse>> saveOrUpdateInventory(@RequestBody InventoryRequest request) {
+        InventoryResponse inventoryResponse = inventoryService.saveOrUpdateInventory(request);
         ApiResponse<InventoryResponse> response = new ApiResponse<>(
-                "success",
-                "Inventory created successfully",
-                createdInventory
+                "Ok",
+                request.getInventoryId() != null ? "Inventory updated successfully" : "Inventory created successfully",
+                inventoryResponse
         );
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok(response);
     }
 }

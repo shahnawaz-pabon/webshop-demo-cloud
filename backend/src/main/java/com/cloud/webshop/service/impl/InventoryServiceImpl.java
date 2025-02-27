@@ -6,6 +6,7 @@ import com.cloud.webshop.model.Supplier;
 import com.cloud.webshop.repository.InventoryRepository;
 import com.cloud.webshop.repository.ProductRepository;
 import com.cloud.webshop.repository.SupplierRepository;
+import com.cloud.webshop.request.InventoryRequest;
 import com.cloud.webshop.response.InventoryResponse;
 import com.cloud.webshop.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +38,28 @@ public class InventoryServiceImpl implements InventoryService {
         return inventoryRepository.findAll(pageable);
     }
 
-    public InventoryResponse createInventory(Inventory inventory) {
+    @Override
+    public InventoryResponse saveOrUpdateInventory(InventoryRequest request) {
         // Check if the product and supplier exist
-        Product product = productRepository.findById(inventory.getProduct().getProductId())
+        Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-        Supplier supplier = supplierRepository.findById(inventory.getSupplier().getSupplierId())
+        Supplier supplier = supplierRepository.findById(request.getSupplierId())
                 .orElseThrow(() -> new RuntimeException("Supplier not found"));
 
-        inventory.setProduct(product);
-        inventory.setSupplier(supplier);
+        Inventory inventory;
+        if (request.getInventoryId() != null) {
+            // Update existing inventory
+            inventory = inventoryRepository.findById(request.getInventoryId())
+                    .orElseThrow(() -> new RuntimeException("Inventory not found"));
+            inventory.setStockLevel(request.getStockLevel());
+        } else {
+            // Create new inventory
+            inventory = new Inventory();
+            inventory.setProduct(product);
+            inventory.setSupplier(supplier);
+            inventory.setStockLevel(request.getStockLevel());
+        }
+
         Inventory savedInventory = inventoryRepository.save(inventory);
         return InventoryResponse.mapToInventoryResponse(savedInventory);
     }
