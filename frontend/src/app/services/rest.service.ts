@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { PaginationUtils } from '../shared/utils/pagination.utils';
 import { ActivatedRoute } from '@angular/router';
 import { CartItem } from '../model/cart-item.model';
+import { ShoppingCart } from '../model/shopping-cart.model';
 
 
 interface ProductRequestBuilder {
@@ -23,11 +24,14 @@ interface ProductResponseHandler {
 
 interface CartRequestBuilder {
     postCartItem: (cartItem: any) => Observable<HttpResponse<CartItem>>;
+    getCartList: () => Observable<HttpResponse<ShoppingCart>>;
 }
 
 interface CartResponseHandler {
     postCartItem_OK: (response: HttpResponse<CartItem>) => void;
     postCartItem_ERROR: (error: any) => void;
+    getCartList_OK: (response: HttpResponse<any>) => void;
+    getCartList_ERROR: (error: any) => void;
 }
 
 @Injectable({
@@ -101,8 +105,8 @@ export class RestService {
     getProductResponseHandler(): ProductResponseHandler {
         return {
             getProducts_OK: (response: HttpResponse<any>) => {
-              const products = response.body?.data?.map((item: any) =>
-              //  const products = response?.body.map((item: any) =>
+                const products = response.body?.data?.map((item: any) =>
+                    //  const products = response?.body.map((item: any) =>
                     new Product(
                         item.productId,
                         item.title,
@@ -148,6 +152,12 @@ export class RestService {
                     cartItem,
                     { observe: 'response' }
                 );
+            },
+            getCartList: (): Observable<HttpResponse<ShoppingCart>> => {
+                return this.http.get<ShoppingCart>(
+                    `${this.baseUrl}/cart/list?userId=1`,  // Add userId parameter
+                    { observe: 'response' }
+                );
             }
         };
     }
@@ -161,6 +171,29 @@ export class RestService {
             },
             postCartItem_ERROR: (error: any) => {
                 console.error('Failed to save cart item:', error);
+                this.appState.controlLoading.next(false);
+            },
+            getCartList_OK: (response: HttpResponse<any>) => {
+                this.appState.controlLoading.next(false);
+                // Convert raw data to ShoppingCart instance
+                if (response.body) {
+                    const cartItems = response.body.cart.map((item: any) =>
+                        new CartItem(
+                            item.product,
+                            item.quantity,
+                            item.totalPrice
+                        )
+                    );
+                    return new ShoppingCart(
+                        cartItems,
+                        response.body.totalPrice,
+                    //    response.body.totalLength
+                    );
+                }
+                return null;
+            },
+            getCartList_ERROR: (error: any) => {
+                console.error('Failed to fetch cart list:', error);
                 this.appState.controlLoading.next(false);
             }
         };
