@@ -1,5 +1,5 @@
 export const loadProductListComponentLazily = () => import('../../features/products/product-list/product-list.component').then(m => m.ProductListComponent);
-export const loadHandleProductComponentLazily = () => import('../../features/products/handle-product/handle-product.component').then(m => m.HandleProductComponent);
+export const loadProductAddComponentLazily = () => import('../../features/products/product-add/add-product.component').then(m => m.AddProductComponent);
 export const loadProductDetailComponentLazily = () => import('../../features/products/product-detail/product-detail.component').then(m => m.ProductDetailComponent);
 export const loadCartComponentLazily = () => import('../../features/cart/cart.component').then(m => m.CartComponent);
 export const loadOrdersComponentLazily = () => import('../../features/orders/orders.component').then(m => m.OrdersComponent);
