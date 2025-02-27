@@ -22,7 +22,7 @@ interface ProductResponseHandler {
 }
 
 interface CartRequestBuilder {
-    postCartItem: (cartItem: any, increment: string) => Observable<HttpResponse<CartItem>>;
+    postCartItem: (cartItem: any) => Observable<HttpResponse<CartItem>>;
 }
 
 interface CartResponseHandler {
@@ -101,8 +101,8 @@ export class RestService {
     getProductResponseHandler(): ProductResponseHandler {
         return {
             getProducts_OK: (response: HttpResponse<any>) => {
-                //   const products = response.body?.data?.map((item: any) =>
-                const products = response?.body.map((item: any) =>
+              const products = response.body?.data?.map((item: any) =>
+              //  const products = response?.body.map((item: any) =>
                     new Product(
                         item.productId,
                         item.title,
@@ -142,9 +142,9 @@ export class RestService {
 
     getCartRequestBuilder(): CartRequestBuilder {
         return {
-            postCartItem: (cartItem: any, increment: string): Observable<HttpResponse<CartItem>> => {
+            postCartItem: (cartItem: any): Observable<HttpResponse<CartItem>> => {
                 return this.http.post<CartItem>(
-                    `${this.baseUrl}/cart/item?increment=${increment}`,
+                    `${this.baseUrl}/cart/add`,
                     cartItem,
                     { observe: 'response' }
                 );
@@ -155,11 +155,13 @@ export class RestService {
     getCartResponseHandler(): CartResponseHandler {
         return {
             postCartItem_OK: (response: HttpResponse<CartItem>) => {
+                console.log('Cart item added successfully');
+                this.appState.incrementCartCount();
                 this.appState.controlLoading.next(false);
             },
             postCartItem_ERROR: (error: any) => {
-                this.appState.controlLoading.next(false);
                 console.error('Failed to save cart item:', error);
+                this.appState.controlLoading.next(false);
             }
         };
     }
