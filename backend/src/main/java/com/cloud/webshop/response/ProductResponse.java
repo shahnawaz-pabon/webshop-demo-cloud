@@ -9,7 +9,6 @@ import lombok.Data;
 public class ProductResponse {
     private Long productId;
     private String title;
-    private String summary;
     private String description;
     private String category;
     private Double price;
@@ -20,7 +19,7 @@ public class ProductResponse {
         return ProductResponse.builder()
                 .productId(product.getProductId())
                 .title(product.getTitle())
-                .summary(product.getSummary())
+                .category(product.getSummary())
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .imageUrl(product.getImageUrl())

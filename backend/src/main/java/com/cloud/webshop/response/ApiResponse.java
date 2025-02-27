@@ -36,4 +36,11 @@ public class ApiResponse<T> {
         this.totalPages = 0;
         this.totalItems = 0;
     }
+
+    // Constructor for non-paginated responses
+    public ApiResponse(String status, String message, T data) {
+        this.status = status;
+        this.message = message;
+        this.data = data;
+    }
 }
