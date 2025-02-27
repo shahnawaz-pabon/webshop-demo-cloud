@@ -69,14 +69,15 @@ export class ProductDetailComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  saveCartItem(quantity: number, increment: string) {
+  saveCartItem(quantity: number) {
     const cartItem = {
       productId: this.product.getProductId(),
-      quantity: quantity
-    }
-
+      quantity: quantity,
+      userId: 1
+    };
+  
     //build request
-    const requestObservable = this.restService.getCartRequestBuilder().postCartItem(cartItem, increment); //ad query param increment=yes
+    const requestObservable = this.restService.getCartRequestBuilder().postCartItem(cartItem);
     const responseHandler = this.restService.getCartResponseHandler();
 
     //start loading

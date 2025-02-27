@@ -1,0 +1,29 @@
+{
+    "products": [
+        {
+            "productId": 208,
+            "title": "Assassin's Creed Odissey",
+            "summary": "PEGI 18",
+            "price": 23.4,
+            "description": "Master various skills and abilities, embark on a quest for adventure, and explore hidden locations while uncovering ancient secrets.",
+            "imageUrl": "https://firebasestorage.googleapis.com/v0/b/ecommerce-angular-9227e.appspot.com/o/product-images%2Ff847877a-9a2d-4d63-96ce-2cd39c6137cf_4.AC-odissey.jpg"
+        },
+        {
+            "productId": 206,
+            "title": "Assassin's Creed Valhalla",
+            "summary": "PEGI 18",
+            "price": 39.5,
+            "description": "Experience the thrill of discovery in worlds teeming with possibilities, diving into action-packed gameplay where strategy and skill reign.",
+            "imageUrl": "https://firebasestorage.googleapis.com/v0/b/ecommerce-angular-9227e.appspot.com/o/product-images%2F27190c55-8e6b-49ec-89fc-1280b4339fe4_3.AC-valhalla.jpg"
+        },
+        {
+            "productId": 205,
+            "title": "Assassin's Creed The Ezio Collection",
+            "summary": "PEGI 18",
+            "price": 23.0,
+            "description": "Explore diverse environments, engage in adventures, forge alliances, and prepare for excitement in captivating landscapes.",
+            "imageUrl": "https://firebasestorage.googleapis.com/v0/b/ecommerce-angular-9227e.appspot.com/o/product-images%2Fbadabe80-c548-4853-a776-31ca8306e4a4_1.AC-ezio-collection.jpg"
+        }
+    ],
+    "cart": []
+}
