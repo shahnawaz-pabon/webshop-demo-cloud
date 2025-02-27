@@ -13,10 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +25,21 @@ public class InventoryController {
 
     @Autowired
     private InventoryService inventoryService;
+
+    @GetMapping("/{inventoryId}")
+    @Operation(
+            summary = "Get a product",
+            description = "Getting a product from the inventory"
+    )
+    public ResponseEntity<ApiResponse<InventoryResponse>> getInventoryById(@PathVariable Long inventoryId) {
+        InventoryResponse inventory = inventoryService.getInventoryById(inventoryId);
+        ApiResponse<InventoryResponse> response = new ApiResponse<>(
+                "success",
+                "Inventory fetched successfully",
+                inventory
+        );
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/list")
     @Operation(
