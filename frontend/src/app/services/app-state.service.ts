@@ -22,6 +22,10 @@ export class AppStateService {
     private productsTotalCount: number = 0;
     private productList: Product[] = [];
 
+    // Add cart count subject
+    private cartCount = new BehaviorSubject<number>(0);
+    cartCount$ = this.cartCount.asObservable();
+
     constructor() {
         // Initialize the app state
         this.setInitDone(true);
@@ -101,5 +105,16 @@ export class AppStateService {
 
     setProductsTotalCount(count: number): void {
         this.productsTotalCount = count;
+    }
+
+    updateCartCount(count: number) {
+        console.log('Updating cart count to:', count);
+        this.cartCount.next(count);
+    }
+
+    incrementCartCount() {
+        const newCount = this.cartCount.value + 1;
+        console.log('Incrementing cart count to:', newCount);
+        this.cartCount.next(newCount);
     }
 } 

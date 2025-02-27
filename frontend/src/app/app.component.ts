@@ -5,6 +5,7 @@ import { LoaderComponent } from './shared/components/animations/loader/loader.co
 import { NgIf } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { WindowUtils } from './shared/utils/window.utils';
+import { NavComponent } from './shared/components/nav/nav.component';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ import { WindowUtils } from './shared/utils/window.utils';
     RouterOutlet,
     HeaderComponent,
     LoaderComponent,
+    NavComponent
   ]
 })
 export class AppComponent {

@@ -1,0 +1,16 @@
+<nav>
+    <ul>
+        <li><a routerLink="/">Home</a></li>
+        <li><a routerLink="/products">Products</a></li>
+        <li>
+            <a routerLink="/cart" class="cart-link">
+                Cart
+                <ng-container *ngIf="cartCount$ | async as count">
+                    <span class="cart-count" *ngIf="count > 0">
+                        {{count}}
+                    </span>
+                </ng-container>
+            </a>
+        </li>
+    </ul>
+</nav> 
