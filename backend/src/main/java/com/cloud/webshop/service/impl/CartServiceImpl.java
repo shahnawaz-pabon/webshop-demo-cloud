@@ -59,7 +59,7 @@ public class CartServiceImpl implements CartService {
         CartItemResponse cartItemResponse = CartItemResponse.toCartItemResponse(product, quantity);
         cartItemResponse.setProduct(productResponse);
         cartItemResponse.setQuantity(quantity);
-        cartItemResponse.setTotalPrice(product.getPrice().doubleValue() * quantity);
+        cartItemResponse.setTotalPrice(product.getPrice() * quantity);
 
         return cartItemResponse;
     }

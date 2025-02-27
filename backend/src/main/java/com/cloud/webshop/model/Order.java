@@ -22,8 +22,8 @@ public class Order {
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 
-    @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalAmount;
+    @Column(name = "total_amount", nullable = false, precision = 10)
+    private Double totalAmount;
 
     @Column(name = "payment_status", length = 50)
     private String paymentStatus;
