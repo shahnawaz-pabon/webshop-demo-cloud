@@ -34,7 +34,7 @@ interface CartResponseHandler {
     providedIn: 'root'
 })
 export class RestService {
-    private baseUrl = 'http://localhost:3000/api/v1';
+    private baseUrl = environment.apiBaseUrl;
 
     constructor(
         private http: HttpClient,
@@ -101,8 +101,8 @@ export class RestService {
     getProductResponseHandler(): ProductResponseHandler {
         return {
             getProducts_OK: (response: HttpResponse<any>) => {
-                //   const products = response.body?.data?.map((item: any) =>
-                const products = response?.body.map((item: any) =>
+              const products = response.body?.data?.map((item: any) =>
+              //  const products = response?.body.map((item: any) =>
                     new Product(
                         item.productId,
                         item.title,
@@ -144,7 +144,7 @@ export class RestService {
         return {
             postCartItem: (cartItem: any): Observable<HttpResponse<CartItem>> => {
                 return this.http.post<CartItem>(
-                    `${this.baseUrl}/cart`,
+                    `${this.baseUrl}/cart/add`,
                     cartItem,
                     { observe: 'response' }
                 );
