@@ -6,6 +6,7 @@ import { AppStateService } from '../services/app-state.service';
 import { environment } from '../../environments/environment';
 import { PaginationUtils } from '../shared/utils/pagination.utils';
 import { ActivatedRoute } from '@angular/router';
+import { CartItemResponse } from '../model/interfaces/cart-item.interface';
 import { CartItem } from '../model/cart-item.model';
 import { ShoppingCart } from '../model/shopping-cart.model';
 
@@ -23,12 +24,12 @@ interface ProductResponseHandler {
 }
 
 interface CartRequestBuilder {
-    postCartItem: (cartItem: any) => Observable<HttpResponse<CartItem>>;
+    postCartItem: (cartItem: any) => Observable<HttpResponse<CartItemResponse>>;
     getCartList: () => Observable<HttpResponse<ShoppingCart>>;
 }
 
 interface CartResponseHandler {
-    postCartItem_OK: (response: HttpResponse<CartItem>) => void;
+    postCartItem_OK: (response: HttpResponse<CartItemResponse>) => void;
     postCartItem_ERROR: (error: any) => void;
     getCartList_OK: (response: HttpResponse<any>) => void;
     getCartList_ERROR: (error: any) => void;
@@ -146,8 +147,8 @@ export class RestService {
 
     getCartRequestBuilder(): CartRequestBuilder {
         return {
-            postCartItem: (cartItem: any): Observable<HttpResponse<CartItem>> => {
-                return this.http.post<CartItem>(
+            postCartItem: (cartItem: any): Observable<HttpResponse<CartItemResponse>> => {
+                return this.http.post<CartItemResponse>(
                     `${this.baseUrl}/cart/add`,
                     cartItem,
                     { observe: 'response' }
@@ -164,7 +165,7 @@ export class RestService {
 
     getCartResponseHandler(): CartResponseHandler {
         return {
-            postCartItem_OK: (response: HttpResponse<CartItem>) => {
+            postCartItem_OK: (response: HttpResponse<CartItemResponse>) => {
                 console.log('Cart item added successfully');
                 this.appState.incrementCartCount();
                 this.appState.controlLoading.next(false);
@@ -187,7 +188,7 @@ export class RestService {
                     return new ShoppingCart(
                         cartItems,
                         response.body.totalPrice,
-                    //    response.body.totalLength
+                        //    response.body.totalLength
                     );
                 }
                 return null;
