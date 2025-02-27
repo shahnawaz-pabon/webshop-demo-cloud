@@ -6,6 +6,7 @@ import { AppStateService } from '../services/app-state.service';
 import { environment } from '../../environments/environment';
 import { PaginationUtils } from '../shared/utils/pagination.utils';
 import { ActivatedRoute } from '@angular/router';
+import { CartItem } from '../model/cart-item.model';
 
 
 interface ProductRequestBuilder {
@@ -18,6 +19,15 @@ interface ProductResponseHandler {
     getProducts_ERROR: (error: any) => void;
     deleteProductById_OK: (response: HttpResponse<{ productId: number }>) => void;
     deleteProductById_ERROR: (error: any) => void;
+}
+
+interface CartRequestBuilder {
+    postCartItem: (cartItem: any, increment: string) => Observable<HttpResponse<CartItem>>;
+}
+
+interface CartResponseHandler {
+    postCartItem_OK: (response: HttpResponse<CartItem>) => void;
+    postCartItem_ERROR: (error: any) => void;
 }
 
 @Injectable({
@@ -76,6 +86,7 @@ export class RestService {
             getProducts: (page: number, size: number = 10): Observable<HttpResponse<any>> => {
                 return this.http.get<any>(
                     `${this.baseUrl}/product/list?page=${page}&size=${size}`,
+                    //  `${this.baseUrl}/products/list?page=${page}&size=${size}`,
                     {
                         observe: 'response',
                         headers: { 'Accept': 'application/json' }
@@ -90,7 +101,8 @@ export class RestService {
     getProductResponseHandler(): ProductResponseHandler {
         return {
             getProducts_OK: (response: HttpResponse<any>) => {
-                const products = response.body.data.map((item: any) =>
+                //   const products = response.body?.data?.map((item: any) =>
+                const products = response?.body.map((item: any) =>
                     new Product(
                         item.productId,
                         item.title,
@@ -128,5 +140,27 @@ export class RestService {
         return this.http.get<Product[]>(`${this.baseUrl}/product/list`, { params });
     }
 
+    getCartRequestBuilder(): CartRequestBuilder {
+        return {
+            postCartItem: (cartItem: any, increment: string): Observable<HttpResponse<CartItem>> => {
+                return this.http.post<CartItem>(
+                    `${this.baseUrl}/cart/item?increment=${increment}`,
+                    cartItem,
+                    { observe: 'response' }
+                );
+            }
+        };
+    }
 
+    getCartResponseHandler(): CartResponseHandler {
+        return {
+            postCartItem_OK: (response: HttpResponse<CartItem>) => {
+                this.appState.controlLoading.next(false);
+            },
+            postCartItem_ERROR: (error: any) => {
+                this.appState.controlLoading.next(false);
+                console.error('Failed to save cart item:', error);
+            }
+        };
+    }
 } 
