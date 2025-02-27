@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -65,8 +66,8 @@ public class ProductController {
         description = "Retrieve a specific product by its ID."
     )
         public ResponseEntity<ApiResponse<ProductResponse>> getProductById(@PathVariable Long id) {
-        Product product = productService.getProductById(id);
-        ProductResponse productResponse = ProductResponse.toProductResponse(product);
+        Optional<Product> product = productService.getProductById(id);
+        ProductResponse productResponse = ProductResponse.toProductResponse(product.get());
 
         ApiResponse<ProductResponse> response = new ApiResponse<>(
                 "success",

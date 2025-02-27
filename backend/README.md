@@ -52,4 +52,6 @@ docker compose up --build
 
 ```shell
 docker exec -it mysql_db mysql -u <user_name> -p
+# Or if you have mysql client, you can access 
+mysql -h 127.0.0.1 -u <user_name> -p
 ```
