@@ -1,6 +1,7 @@
 package com.cloud.webshop.controller;
 
 import com.cloud.webshop.model.Order;
+import com.cloud.webshop.response.ApiResponse;
 import com.cloud.webshop.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,8 +24,18 @@ public class OrderController {
             summary = "Create an order",
             description = "Create an order from the user's cart list."
     )
-    public ResponseEntity<Order> createOrder(@RequestParam Long userId) {
+    public ResponseEntity<ApiResponse<Order>> createOrder(
+            @RequestParam Long userId) {
+        // Create the order
         Order order = orderService.createOrder(userId);
-        return ResponseEntity.ok(order);
+
+        // Prepare the API response
+        ApiResponse<Order> response = new ApiResponse<>(
+                "success",
+                "Order created successfully",
+                order
+        );
+
+        return ResponseEntity.ok(response);
     }
 }
