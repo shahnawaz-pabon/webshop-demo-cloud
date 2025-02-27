@@ -5,7 +5,7 @@ import { CartItem, CartItemResponse } from '../../../model/interfaces/cart-item.
 import { Product } from '../../../model/product.model';
 import { AppStateService } from '../../../services/app-state.service';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorsHandlingService } from '../../../services/errors-handling.service';
 import { RestService } from '../../../services/rest.service';
 import { ProductUtils } from '../../../shared/utils/product.utils';
@@ -30,7 +30,8 @@ export class ProductDetailComponent implements OnInit, AfterViewInit, OnDestroy 
     private pageTitle: Title,
     private activatedRoute: ActivatedRoute,
     private errorsHandlingService: ErrorsHandlingService,
-    private restService: RestService
+    private restService: RestService,
+    private router: Router
   ) {
     this.product = new Product(0, '', '', 0, '', '');
   }
@@ -112,6 +113,26 @@ export class ProductDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   //     }
   //   });
   // }
+
+  updateProduct() {
+    this.router.navigate(['/products', this.product.getProductId(), 'edit']);
+  }
+
+  deleteProduct() {
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.restService.getProductRequestBuilder()
+        .deleteProductById(this.product.getProductId())
+        .subscribe({
+          next: (response) => {
+            console.log('Product deleted successfully');
+            this.router.navigate(['/products']);
+          },
+          error: (error) => {
+            console.error('Error deleting product:', error);
+          }
+        });
+    }
+  }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());

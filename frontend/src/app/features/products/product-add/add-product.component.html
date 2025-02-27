@@ -1,5 +1,5 @@
 <div class="add-product-container">
-    <h1>Add a New Product</h1>
+    <h1>{{ isEditMode ? 'Edit Product' : 'Add a New Product' }}</h1>
     
     <form (ngSubmit)="onSubmit()">
       <div class="form-control">
@@ -55,6 +55,8 @@
           required></textarea>
       </div>
   
-      <button type="submit" class="btn">Add Product</button>
+      <button type="submit" class="btn">
+        {{ isEditMode ? 'Update Product' : 'Add Product' }}
+      </button>
     </form>
   </div> 
