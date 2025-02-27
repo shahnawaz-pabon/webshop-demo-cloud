@@ -1,3 +1,4 @@
+import { BaseResponse } from './base-response.interface';
 import { Product } from './product.interface';
 
 export interface CartItem {
@@ -5,3 +6,4 @@ export interface CartItem {
     quantity: number;
     totalPrice: number;
 } 
+export interface CartItemResponse extends BaseResponse<CartItem> { }

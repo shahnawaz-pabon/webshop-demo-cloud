@@ -17,6 +17,7 @@ export class AppStateService {
     controlLoading = new Subject<boolean>();
     controlCartRecovery = new Subject<number>();
     controlPagination = new Subject<{ maxPage: number, currentPage: number }>();
+    controlCartUpdate = new Subject<boolean>();
 
     private initDone = true;
     private productsTotalCount: number = 0;
