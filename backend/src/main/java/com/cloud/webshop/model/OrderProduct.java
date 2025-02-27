@@ -3,10 +3,12 @@ package com.cloud.webshop.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "Order_Product")
+@NoArgsConstructor
 public class OrderProduct {
     @EmbeddedId
     private OrderProductId id;

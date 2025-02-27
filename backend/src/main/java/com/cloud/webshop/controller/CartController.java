@@ -35,7 +35,12 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
+    @CrossOrigin
     @GetMapping("/list")
+    @Operation(
+            summary = "Get cart list by user",
+            description = "Getting cart list added by a specific user"
+    )
     public ResponseEntity<ApiResponse<CartListResponse>> getCartList(@RequestParam Long userId) {
         CartListResponse cartListResponse = cartService.getCartList(userId);
 

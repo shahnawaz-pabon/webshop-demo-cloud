@@ -2,10 +2,14 @@ package com.cloud.webshop.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+@Data
 @Embeddable
+@NoArgsConstructor
 public class OrderProductId implements Serializable {
     @Column(name = "order_id", nullable = false)
     private Long orderId;
