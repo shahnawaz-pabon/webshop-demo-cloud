@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,5 +74,20 @@ public class InventoryController {
         );
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/create")
+    @Operation(
+            summary = "Create a product's inventory",
+            description = "Create product's inventory"
+    )
+    public ResponseEntity<ApiResponse<InventoryResponse>> createInventory(@RequestBody Inventory inventory) {
+        InventoryResponse createdInventory = inventoryService.createInventory(inventory);
+        ApiResponse<InventoryResponse> response = new ApiResponse<>(
+                "success",
+                "Inventory created successfully",
+                createdInventory
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

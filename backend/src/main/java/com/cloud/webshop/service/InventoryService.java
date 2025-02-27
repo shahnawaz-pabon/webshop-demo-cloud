@@ -8,4 +8,5 @@ import org.springframework.data.domain.Pageable;
 public interface InventoryService {
     InventoryResponse getInventoryById(Long inventoryId);
     Page<Inventory> getAllInventory(Pageable pageable);
+    InventoryResponse createInventory(Inventory inventory);
 }

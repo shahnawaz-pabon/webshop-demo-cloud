@@ -1,7 +1,11 @@
 package com.cloud.webshop.service.impl;
 
 import com.cloud.webshop.model.Inventory;
+import com.cloud.webshop.model.Product;
+import com.cloud.webshop.model.Supplier;
 import com.cloud.webshop.repository.InventoryRepository;
+import com.cloud.webshop.repository.ProductRepository;
+import com.cloud.webshop.repository.SupplierRepository;
 import com.cloud.webshop.response.InventoryResponse;
 import com.cloud.webshop.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,12 @@ public class InventoryServiceImpl implements InventoryService {
     @Autowired
     private InventoryRepository inventoryRepository;
 
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private SupplierRepository supplierRepository;
+
     @Override
     public InventoryResponse getInventoryById(Long inventoryId) {
         Inventory inventory = inventoryRepository.findById(inventoryId)
@@ -25,5 +35,18 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public Page<Inventory> getAllInventory(Pageable pageable) {
         return inventoryRepository.findAll(pageable);
+    }
+
+    public InventoryResponse createInventory(Inventory inventory) {
+        // Check if the product and supplier exist
+        Product product = productRepository.findById(inventory.getProduct().getProductId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        Supplier supplier = supplierRepository.findById(inventory.getSupplier().getSupplierId())
+                .orElseThrow(() -> new RuntimeException("Supplier not found"));
+
+        inventory.setProduct(product);
+        inventory.setSupplier(supplier);
+        Inventory savedInventory = inventoryRepository.save(inventory);
+        return InventoryResponse.mapToInventoryResponse(savedInventory);
     }
 }
