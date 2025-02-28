@@ -5,6 +5,7 @@ import com.cloud.webshop.model.Product;
 import com.cloud.webshop.repository.InventoryRepository;
 import com.cloud.webshop.repository.ProductRepository;
 import com.cloud.webshop.response.ApiResponse;
+import com.cloud.webshop.response.ProductNameResponse;
 import com.cloud.webshop.response.ProductResponse;
 import com.cloud.webshop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +98,17 @@ public class ProductServiceImpl implements ProductService {
 
         // Map the saved product to ProductResponse
         return ProductResponse.toProductResponse(savedProduct);
+    }
+
+    @Override
+    public List<ProductNameResponse> getProductList(){
+        // Fetch all products
+        List<Product> products = productRepository.findAll();
+
+        // Map products to ProductResponseMinimal
+        return products.stream()
+                .map(ProductNameResponse::toProductResponse)
+                .collect(Collectors.toList());
     }
 }
 
