@@ -28,6 +28,6 @@ public class Order {
     @Column(name = "payment_status", length = 50)
     private String paymentStatus;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> orderProducts;
 }

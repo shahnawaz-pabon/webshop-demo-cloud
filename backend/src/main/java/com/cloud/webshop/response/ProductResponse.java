@@ -13,6 +13,7 @@ public class ProductResponse {
     private String category;
     private Double price;
     private String imageUrl;
+    private int quantity;
 
     // Convert Product entity to ProductResponse
     public static ProductResponse toProductResponse(Product product) {
