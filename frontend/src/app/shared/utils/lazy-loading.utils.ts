@@ -11,3 +11,7 @@ export const loadPaymentResultComponentLazily = () => import('../../features/pay
 export const loadAddInventoryComponentLazily = () => 
   import('../../features/inventory/add-inventory/add-inventory.component')
     .then(m => m.AddInventoryComponent); 
+export const loadAddSupplierComponentLazily = () => 
+    import('../../features/supplier/supplier-add/add-supplier.component')
+      .then(m => m.AddSupplierComponent);  
+
