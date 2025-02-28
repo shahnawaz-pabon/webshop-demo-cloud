@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+import com.cloud.webshop.request.ProductRequest;
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -81,6 +81,22 @@ public class ProductServiceImpl implements ProductService {
                 filteredPage.getTotalPages(),
                 filteredPage.getTotalElements()
         );
+    }
+    @Override
+    public ProductResponse addProduct(ProductRequest request) {
+        // Create a new product
+        Product product = new Product();
+        product.setTitle(request.getTitle());
+        product.setDescription(request.getDescription());
+        product.setSummary(request.getCategory());
+        product.setPrice(request.getPrice());
+        product.setImageUrl(request.getImageUrl());
+
+        // Save the product
+        Product savedProduct = productRepository.save(product);
+
+        // Map the saved product to ProductResponse
+        return ProductResponse.toProductResponse(savedProduct);
     }
 }
 

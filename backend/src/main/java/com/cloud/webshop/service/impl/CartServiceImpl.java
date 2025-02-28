@@ -49,14 +49,14 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cartItem);
 
         // Prepare response
-        return buildCartItemResponse(product, cartItem.getQuantity());
+        return buildCartItemResponse(product, cartItem.getQuantity(),cartItem.getCartId());
     }
 
 
-    private CartItemResponse buildCartItemResponse(Product product, int quantity) {
+    private CartItemResponse buildCartItemResponse(Product product, int quantity, long cartId) {
         ProductResponse productResponse = ProductResponse.toProductResponse(product);
 
-        CartItemResponse cartItemResponse = CartItemResponse.toCartItemResponse(product, quantity);
+        CartItemResponse cartItemResponse = CartItemResponse.toCartItemResponse(product, quantity, cartId);
         cartItemResponse.setProduct(productResponse);
         cartItemResponse.setQuantity(quantity);
         cartItemResponse.setTotalPrice(product.getPrice() * quantity);
@@ -73,7 +73,7 @@ public class CartServiceImpl implements CartService {
 
         for (Cart cartItem : cartItems) {
             Product product = cartItem.getProduct();
-            CartItemResponse cartItemResponse = buildCartItemResponse(product, cartItem.getQuantity());
+            CartItemResponse cartItemResponse = buildCartItemResponse(product, cartItem.getQuantity(), cartItem.getCartId());
             cartItemResponses.add(cartItemResponse);
 
             totalPrice += cartItemResponse.getTotalPrice();
@@ -86,5 +86,8 @@ public class CartServiceImpl implements CartService {
         response.setTotalLength(totalLength);
 
         return response;
+    }
+    public void deleteCartItem(Long cartId) {
+        cartRepository.deleteById(cartId);
     }
 }

@@ -7,4 +7,5 @@ import com.cloud.webshop.response.CartListResponse;
 public interface CartService {
     public CartItemResponse addToCart(AddToCartRequest request);
     public CartListResponse getCartList(Long userId);
+    void deleteCartItem(Long cartId);
 }
