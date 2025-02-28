@@ -1,6 +1,50 @@
 <section class="product-list">
   <h1>{{ title }}</h1>
 
+  <div class="search-container">
+    <div class="search-controls">
+      <div class="search-input-group">
+        <input 
+          type="text" 
+          [(ngModel)]="searchKeyword"
+          placeholder="Search products by title or category...">
+      </div>
+
+      <div class="available-checkbox">
+        <input 
+          type="checkbox" 
+          id="available" 
+          [(ngModel)]="isAvailable">
+        <label for="available">In Stock Products</label>
+      </div>
+
+      <div class="price-range-inline">
+        <div class="range-slider">
+          <div class="slider-track"></div>
+          <input 
+            type="range" 
+            class="min-price" 
+            [(ngModel)]="minPrice" 
+            [min]="0" 
+            [max]="1000" 
+            (input)="updateSlider($event)">
+          <input 
+            type="range" 
+            class="max-price" 
+            [(ngModel)]="maxPrice" 
+            [min]="0" 
+            [max]="1000" 
+            (input)="updateSlider($event)">
+        </div>
+        <span class="price-values">${{ minPrice }} - ${{ maxPrice }}</span>
+      </div>
+      
+      <button class="search-button" (click)="executeSearch()" [disabled]="isSearching">
+        <i class="fa-solid" [class.fa-magnifying-glass]="!isSearching" [class.fa-spinner]="isSearching" [class.fa-spin]="isSearching"></i>
+      </button>
+    </div>
+  </div>
+
   <div *ngIf="appState.getProductList().length > 0">
     <ul class="products-grid">
       <li *ngFor="let product of appState.getProductList()">

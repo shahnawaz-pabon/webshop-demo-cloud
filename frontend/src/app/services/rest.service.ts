@@ -12,7 +12,7 @@ import { ShoppingCart } from '../model/shopping-cart.model';
 
 
 interface ProductRequestBuilder {
-    getProducts: (page: number, size?: number) => Observable<HttpResponse<any>>;
+    getProducts: (page: number, size?: number, keyword?: string, isAvailable?: boolean) => Observable<HttpResponse<any>>;
     deleteProductById: (productId: number) => Observable<HttpResponse<{ productId: number }>>;
 }
 
@@ -88,15 +88,20 @@ export class RestService {
 
     getProductRequestBuilder(): ProductRequestBuilder {
         return {
-            getProducts: (page: number, size: number = 10): Observable<HttpResponse<any>> => {
-                return this.http.get<any>(
-                    `${this.baseUrl}/product/list?page=${page}&size=${size}`,
-                    //  `${this.baseUrl}/products/list?page=${page}&size=${size}`,
-                    {
-                        observe: 'response',
-                        headers: { 'Accept': 'application/json' }
-                    }
-                );
+            getProducts: (page: number, size: number = 10, keyword?: string, isAvailable: boolean = true): Observable<HttpResponse<any>> => {
+                let url = `${this.baseUrl}/products/list?page=${page}&size=${size}`;
+
+                if (keyword) {
+                    url += `&keyword=${keyword}`;
+                }
+                if (isAvailable) {
+                    url += `&isAvailable=${isAvailable}`;
+                }
+
+                return this.http.get<any>(url, {
+                    observe: 'response',
+                    headers: { 'Accept': 'application/json' }
+                });
             },
             deleteProductById: (productId: number) =>
                 this.http.delete<{ productId: number }>(`${this.baseUrl}/products/${productId}`, { observe: 'response' })

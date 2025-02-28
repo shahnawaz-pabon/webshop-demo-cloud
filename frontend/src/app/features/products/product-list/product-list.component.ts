@@ -6,8 +6,10 @@ import { PaginationComponent } from '../pagination/pagination.component';
 import { NgForOf, NgIf } from '@angular/common';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 import { GuardService } from '../../../services/guard.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
 import { PaginationUtils } from '../../../shared/utils/pagination.utils';
+import { FormsModule } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-list',
@@ -19,7 +21,8 @@ import { PaginationUtils } from '../../../shared/utils/pagination.utils';
     NgForOf,
     RouterLink,
     ProductItemComponent,
-    PaginationComponent
+    PaginationComponent,
+    FormsModule
   ]
 })
 export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -29,6 +32,16 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   componentLoaded: boolean = false;
 
   subscriptions: Subscription[] = [];
+
+  searchKeyword: string = '';
+  isAvailable: boolean = true;
+
+  minPrice: number = 0;
+  maxPrice: number = 1000;
+
+  isSearching: boolean = false;
+
+  private priceChangeSubject = new Subject<void>();
 
   constructor(
     public appState: AppStateService,
@@ -55,6 +68,12 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // listen on query params (selected page)
     this.handleSelectedPage();
+
+    this.priceChangeSubject.pipe(
+      debounceTime(500)  // Wait 500ms after last change
+    ).subscribe(() => {
+      this.executeSearch();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -84,9 +103,9 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.appState.isUserAdmin()) {
       this.title = 'Manage Products';
     } else {
-      this.title = "What's New?";
+      this.title = '';
     }
-    this.pageTitle.setTitle(this.title);
+    this.pageTitle.setTitle('Products');
   }
 
   ngOnDestroy(): void {
@@ -101,6 +120,42 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
       maxPage: totalPages,
       currentPage: currentPage
     });
+  }
+
+  toggleAvailable() {
+    this.isAvailable = !this.isAvailable;
+  }
+
+  executeSearch() {
+    this.isSearching = true;
+    const page = 0;
+    this.guardService.loadProducts(page, this.appState.isUserAdmin(), this.searchKeyword, this.isAvailable)
+      .subscribe({
+        next: (response) => {
+          console.log('Search response:', response);
+          this.handleResponse(response.body);
+          this.isSearching = false;
+        },
+        error: (error) => {
+          console.error('Search error:', error);
+          this.isSearching = false;
+        }
+      });
+  }
+
+  updateSlider(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const isMinSlider = input.classList.contains('min-price');
+
+    if (this.minPrice > this.maxPrice) {
+      if (isMinSlider) {
+        this.maxPrice = this.minPrice;
+      } else {
+        this.minPrice = this.maxPrice;
+      }
+    }
+
+    this.priceChangeSubject.next();
   }
 
 }
