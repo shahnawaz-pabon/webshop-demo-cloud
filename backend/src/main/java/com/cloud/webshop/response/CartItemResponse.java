@@ -10,16 +10,18 @@ public class CartItemResponse {
     private ProductResponse product;
     private int quantity;
     private double totalPrice;
+    private long cartId;
 
     public CartItemResponse() {
 
     }
 
-    public static CartItemResponse toCartItemResponse(Product product, int quantity) {
+    public static CartItemResponse toCartItemResponse(Product product, int quantity, long cartId) {
         CartItemResponse cartItemResponse = new CartItemResponse();
         cartItemResponse.setProduct(ProductResponse.toProductResponse(product));
         cartItemResponse.setQuantity(quantity);
         cartItemResponse.setTotalPrice(product.getPrice().doubleValue() * quantity);
+        cartItemResponse.setCartId(cartId);
         return cartItemResponse;
     }
 }
