@@ -2,15 +2,15 @@ package com.cloud.webshop.controller;
 
 import com.cloud.webshop.model.Order;
 import com.cloud.webshop.response.ApiResponse;
+import com.cloud.webshop.response.OrderHistoryResponse;
 import com.cloud.webshop.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/order")
@@ -36,6 +36,17 @@ public class OrderController {
                 order
         );
 
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<ApiResponse<List<OrderHistoryResponse>>> getOrderHistory(@RequestParam Long userId) {
+        List<OrderHistoryResponse> orderHistory = orderService.getOrderHistory(userId);
+        ApiResponse<List<OrderHistoryResponse>> response = new ApiResponse<>(
+                "success",
+                "Order history retrieved successfully",
+                orderHistory
+        );
         return ResponseEntity.ok(response);
     }
 }
