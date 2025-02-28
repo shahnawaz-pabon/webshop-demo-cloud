@@ -12,7 +12,8 @@ import {
     loadPaymentResultComponentLazily,
     loadProductDetailComponentLazily,
     loadProductListComponentLazily,
-    loadSignupComponentLazily
+    loadSignupComponentLazily,
+    loadAddSupplierComponentLazily
 } from "./shared/utils/lazy-loading.utils";
 
 //function guards
@@ -63,6 +64,13 @@ export const appRoutes: Routes = [
             },
 
         ]
+    },
+
+    {
+        path: 'add-supplier',
+        loadComponent: loadAddSupplierComponentLazily,
+        canActivate: [canActivateGuard],
+        data: { id: RouteEnum.addSupplier }
     },
 
     {
