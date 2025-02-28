@@ -87,4 +87,7 @@ public class CartServiceImpl implements CartService {
 
         return response;
     }
+    public void deleteCartItem(Long cartId) {
+        cartRepository.deleteById(cartId);
+    }
 }
