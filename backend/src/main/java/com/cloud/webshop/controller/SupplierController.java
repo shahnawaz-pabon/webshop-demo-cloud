@@ -1,6 +1,7 @@
 package com.cloud.webshop.controller;
 
 import com.cloud.webshop.model.Supplier;
+import com.cloud.webshop.request.SupplierRequest;
 import com.cloud.webshop.response.ApiResponse;
 import com.cloud.webshop.response.SupplierResponse;
 import com.cloud.webshop.service.SupplierService;
@@ -10,11 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,5 +58,15 @@ public class SupplierController {
         );
 
         return ResponseEntity.ok(response);
+    }
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse<SupplierResponse>> addSupplier(@RequestBody SupplierRequest request) {
+        SupplierResponse supplierResponse = supplierService.addSupplier(request);
+        ApiResponse<SupplierResponse> response = new ApiResponse<>(
+                "created",
+                "Supplier added successfully",
+                supplierResponse
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
