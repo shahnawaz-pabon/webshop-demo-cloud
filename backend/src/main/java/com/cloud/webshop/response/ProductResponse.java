@@ -14,6 +14,7 @@ public class ProductResponse {
     private Double price;
     private String imageUrl;
     private int quantity;
+    private Long inventoryId;
 
     // Convert Product entity to ProductResponse
     public static ProductResponse toProductResponse(Product product) {

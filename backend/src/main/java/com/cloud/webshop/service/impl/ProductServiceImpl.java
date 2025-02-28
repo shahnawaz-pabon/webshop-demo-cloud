@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import com.cloud.webshop.request.ProductRequest;
@@ -34,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ApiResponse<List<ProductResponse>> getAllProducts(int page, int size, String keyword) {
+    public ApiResponse<List<ProductResponse>> getAllProducts(int page, int size, String keyword, boolean isAvailable) {
         // Create a Pageable object for pagination
         Pageable pageable = PageRequest.of(page, size);
 
@@ -46,21 +47,36 @@ public class ProductServiceImpl implements ProductService {
             productPage = productRepository.findAll(pageable);
         }
 
-        // Map products to ProductResponse with available quantity
+        // Map products to ProductResponse with available quantity and inventory details
         List<ProductResponse> productResponses = productPage.getContent().stream()
                 .map(product -> {
-                    // Create ProductResponse
-                    ProductResponse response = ProductResponse.toProductResponse(product);
-
-                    // Calculate available quantity
+                    // Fetch inventories for the product
                     List<Inventory> inventories = inventoryRepository.findByProductId(product.getProductId());
+
+                    // Calculate total available quantity
                     int availableQuantity = inventories.stream()
                             .mapToInt(Inventory::getStockLevel)
                             .sum();
-                    response.setQuantity(availableQuantity); // Set quantity (0 if no inventory exists)
+
+                    // Skip products with no inventory if isAvailable is true
+                    if (isAvailable && availableQuantity <= 0) {
+                        return null; // Skip products with no inventory
+                    }
+
+                    // Create ProductResponse
+                    ProductResponse response = ProductResponse.toProductResponse(product);
+                    response.setQuantity(availableQuantity);
+
+                    // Include the first inventory ID (if available)
+                    if (!inventories.isEmpty()) {
+                        response.setInventoryId(inventories.get(0).getInventoryId()); // First inventory ID
+                    } else {
+                        response.setInventoryId(null); // No inventory ID
+                    }
 
                     return response;
                 })
+                .filter(Objects::nonNull) // Remove null entries (products skipped due to isAvailable)
                 .collect(Collectors.toList());
 
         // Create a custom page for the results

@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface ProductService {
     Optional<Product> getProductById(Long id);
-    ApiResponse<List<ProductResponse>> getAllProducts(int page, int size, String keyword);
+    ApiResponse<List<ProductResponse>> getAllProducts(int page, int size, String keyword, boolean isAvailable);
     ProductResponse addProduct(ProductRequest request);
     List<ProductNameResponse> getProductList();
 }

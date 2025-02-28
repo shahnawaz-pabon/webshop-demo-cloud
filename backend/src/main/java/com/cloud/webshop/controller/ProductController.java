@@ -32,8 +32,9 @@ public class ProductController {
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String keyword) {
-        ApiResponse<List<ProductResponse>> response = productService.getAllProducts(page, size, keyword);
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false, defaultValue = "false") boolean isAvailable) {
+        ApiResponse<List<ProductResponse>> response = productService.getAllProducts(page, size, keyword, isAvailable);
         return ResponseEntity.ok(response);
     }
 
