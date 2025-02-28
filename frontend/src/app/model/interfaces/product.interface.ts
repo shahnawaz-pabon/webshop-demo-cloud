@@ -6,3 +6,9 @@ export interface Product {
     description: string;
     imageUrl: string;
 } 
+export interface ProductResponse {
+    data: Product[];
+    page: number;
+    totalItems: number;
+    totalPages: number;
+}

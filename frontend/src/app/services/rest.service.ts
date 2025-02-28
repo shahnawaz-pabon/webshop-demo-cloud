@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from '../model/product.model';
 import { AppStateService } from '../services/app-state.service';
@@ -203,5 +203,22 @@ export class RestService {
                 this.appState.controlLoading.next(false);
             }
         };
+    }
+
+    getApiUrl(): string {
+        return this.baseUrl;
+    }
+
+    getHeaders(isAdmin: boolean): HttpHeaders {
+        let headers = new HttpHeaders()
+            .set('Content-Type', 'application/json');
+
+        // Add any auth tokens or other headers if needed
+        // For example:
+        // if (isAdmin) {
+        //     headers = headers.set('Authorization', `Bearer ${this.getAdminToken()}`);
+        // }
+
+        return headers;
     }
 } 

@@ -10,6 +10,7 @@ import { Subscription, Subject } from 'rxjs';
 import { PaginationUtils } from '../../../shared/utils/pagination.utils';
 import { FormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
+import { Product } from '../../../model/product.model';
 
 @Component({
   selector: 'app-product-list',
@@ -34,7 +35,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
   searchKeyword: string = '';
-  isAvailable: boolean = true;
+  isAvailable: boolean = false;
 
   minPrice: number = 0;
   maxPrice: number = 1000;
@@ -54,10 +55,22 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     // set title
     this.setTitles();
 
-    // load initial products (page 1)
-    const productSub = this.guardService.loadProducts(0, this.appState.isUserAdmin()).subscribe({
+    // load initial products (page 1) with isAvailable as undefined
+    const productSub = this.guardService.loadProducts(
+      0,
+      this.appState.isUserAdmin(),
+      undefined,
+      undefined
+    ).subscribe({
       next: (response) => {
-        console.log('Full response:', response); // Log the full response
+        console.log('Full response structure:', JSON.stringify(response, null, 2));
+        console.log('Response type:', typeof response);
+        console.log('Response body:', response.body);
+        if (response.body) {
+          console.log('Body content:', response.body.content);
+          console.log('Total elements:', response.body.totalElements);
+          console.log('Total pages:', response.body.totalPages);
+        }
         this.handleResponse(response.body);
       },
       error: (error) => {
@@ -90,8 +103,25 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.componentLoaded) {
           const page = PaginationUtils.getSelectedPage(queryParams);
 
-          const productSub = this.guardService.loadProducts(page, false).subscribe();
-          this.guardService.addSubscriptionFromOutside(productSub);
+          // If we're in search mode (has keyword or isAvailable), use search pagination
+          if (this.searchKeyword || this.isAvailable) {
+            const productSub = this.guardService.loadProducts(
+              page,
+              this.appState.isUserAdmin(),
+              this.searchKeyword,
+              this.isAvailable ? true : undefined
+            ).subscribe();
+            this.guardService.addSubscriptionFromOutside(productSub);
+          } else {
+            // Otherwise use regular pagination
+            const productSub = this.guardService.loadProducts(
+              page,
+              this.appState.isUserAdmin(),
+              undefined,
+              undefined
+            ).subscribe();
+            this.guardService.addSubscriptionFromOutside(productSub);
+          }
         }
       }
     );
@@ -113,13 +143,44 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleResponse(response: any) {
-    const totalPages = response.totalPages;
-    const currentPage = response.page;
-    console.log('Total pages: ki eikhan theke set hoitese');
-    this.appState.controlPagination.next({
-      maxPage: totalPages,
-      currentPage: currentPage
-    });
+    console.log('Handle Response called with:', response);
+
+    if (response) {
+      // Update the product list in AppStateService
+      if (response.content) {  // The data is in response.content, not response.data
+        console.log('Raw product data:', response.content);
+
+        // Map the raw data to Product objects
+        const products = response.content.map((item: any) => new Product(
+          item.productId,
+          item.title,
+          item.summary || '',  // Add default empty string if summary is missing
+          item.price,
+          item.description,
+          item.imageUrl || ''  // Add default empty string if imageUrl is missing
+        ));
+
+        console.log('Mapped products:', products);
+        this.appState.setProductList(products);
+        this.appState.setProductsTotalCount(response.totalElements);
+      } else {
+        console.warn('No content in response');
+        this.appState.setProductList([]);
+      }
+
+      const totalPages = response.totalPages || 0;
+      const currentPage = response.page || 0;
+
+      console.log('Pagination values:', { totalPages, currentPage });
+
+      this.appState.controlPagination.next({
+        maxPage: totalPages,
+        currentPage: currentPage
+      });
+    } else {
+      console.warn('No response received in handleResponse');
+      this.appState.setProductList([]);
+    }
   }
 
   toggleAvailable() {
@@ -129,18 +190,26 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   executeSearch() {
     this.isSearching = true;
     const page = 0;
-    this.guardService.loadProducts(page, this.appState.isUserAdmin(), this.searchKeyword, this.isAvailable)
-      .subscribe({
-        next: (response) => {
-          console.log('Search response:', response);
-          this.handleResponse(response.body);
-          this.isSearching = false;
-        },
-        error: (error) => {
-          console.error('Search error:', error);
-          this.isSearching = false;
-        }
-      });
+
+    // Only include isAvailable in the request if checkbox is checked
+    const availableFlag = this.isAvailable ? true : undefined;
+
+    this.guardService.loadProducts(
+      page,
+      this.appState.isUserAdmin(),
+      this.searchKeyword,
+      availableFlag
+    ).subscribe({
+      next: (response) => {
+        console.log('Search response:', response);
+        this.handleResponse(response.body);
+        this.isSearching = false;
+      },
+      error: (error) => {
+        console.error('Search error:', error);
+        this.isSearching = false;
+      }
+    });
   }
 
   updateSlider(event: Event) {
@@ -156,6 +225,11 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.priceChangeSubject.next();
+  }
+
+  // Add a method to handle checkbox changes
+  onAvailableChange() {
+    this.executeSearch();
   }
 
 }
