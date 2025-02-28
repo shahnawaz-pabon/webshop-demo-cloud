@@ -1,31 +1,52 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { RestService } from './rest.service';
+import { ProductResponse } from '../model/interfaces/product.interface';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GuardService {
     private outsideSubscriptions: Subscription[] = [];
+    private apiUrl: string;
 
-    constructor(private restService: RestService) { }
+    constructor(private restService: RestService, private http: HttpClient) {
+        this.apiUrl = this.restService.getApiUrl();
+    }
 
     canActivate(route: ActivatedRouteSnapshot): boolean {
         return true; // Add your guard logic here
     }
 
-    loadProducts(page: number, isAdmin: boolean, keyword?: string, isAvailable: boolean = true): Observable<any> {
-        const requestObservable = this.restService.getProductRequestBuilder()
-            .getProducts(page, 1000, keyword, isAvailable);
-        const responseHandler = this.restService.getProductResponseHandler();
+    loadProducts(page: number, isAdmin: boolean, searchKeyword?: string, isAvailable?: boolean): Observable<any> {
+        // Different URL and parameters for initial load vs search
+        if (!searchKeyword && isAvailable === undefined) {
+            // Initial load - use default pagination and isAvailable=false
+            return this.http.get<ProductResponse>(
+                `${this.apiUrl}/product/list?page=${page}&size=10&isAvailable=false`, {
+                observe: 'response',
+                headers: this.restService.getHeaders(isAdmin)
+            });
+        } else {
+            // Search functionality - use search parameters
+            let url = `${this.apiUrl}/product/list?page=${page}&size=10`;
 
-        requestObservable.subscribe({
-            next: (response) => responseHandler.getProducts_OK(response),
-            error: (error) => responseHandler.getProducts_ERROR(error)
-        });
+            if (searchKeyword) {
+                url += `&keyword=${searchKeyword}`;
+            }
 
-        return requestObservable;
+            if (isAvailable === true) {
+                url += `&isAvailable=true`;
+            }
+
+            return this.http.get(url, {
+                observe: 'response',
+                headers: this.restService.getHeaders(isAdmin)
+            });
+        }
     }
 
     addSubscriptionFromOutside(subscription: Subscription): void {

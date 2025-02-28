@@ -5,7 +5,7 @@
     <div class="form-group">
       <label for="productId">Product ID</label>
       <input 
-        type="number" 
+        type="text" 
         id="productId" 
         name="productId"
         [(ngModel)]="inventory.productId" 
@@ -13,7 +13,7 @@
     </div>
 
     <div class="form-group">
-      <label for="quantity">Stock Level</label>
+      <label for="quantity">Stock level</label>
       <input 
         type="number" 
         id="quantity" 
@@ -24,13 +24,18 @@
     </div>
 
     <div class="form-group">
-      <label for="supplier">Supplier ID</label>
-      <input 
-        type="number" 
+      <label for="supplier">Supplier</label>
+      <select 
         id="supplier" 
         name="supplier"
         [(ngModel)]="inventory.supplier" 
         required>
+        <option value="">Select a supplier</option>
+        <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
+          {{ supplier.name }}
+        </option>
+      </select>
+      <div *ngIf="isLoading" class="loading-text">Loading suppliers...</div>
     </div>
 
     <button 

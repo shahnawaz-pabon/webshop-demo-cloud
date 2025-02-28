@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from '../model/product.model';
 import { AppStateService } from '../services/app-state.service';
@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CartItemResponse } from '../model/interfaces/cart-item.interface';
 import { CartItem } from '../model/cart-item.model';
 import { ShoppingCart } from '../model/shopping-cart.model';
+import { SupplierResponse, SupplierListResponse } from '../model/interfaces/supplier.interface';
 
 
 interface ProductRequestBuilder {
@@ -203,5 +204,29 @@ export class RestService {
                 this.appState.controlLoading.next(false);
             }
         };
+    }
+
+    getApiUrl(): string {
+        return this.baseUrl;
+    }
+
+    getHeaders(isAdmin: boolean): HttpHeaders {
+        let headers = new HttpHeaders()
+            .set('Content-Type', 'application/json');
+
+        // Add any auth tokens or other headers if needed
+        // For example:
+        // if (isAdmin) {
+        //     headers = headers.set('Authorization', `Bearer ${this.getAdminToken()}`);
+        // }
+
+        return headers;
+    }
+
+    getSupplierList(page: number, size: number): Observable<HttpResponse<SupplierListResponse>> {
+        return this.http.get<SupplierListResponse>(
+            `${this.baseUrl}/supplier/list?page=${page}&size=${size}`,
+            { observe: 'response' }
+        );
     }
 } 

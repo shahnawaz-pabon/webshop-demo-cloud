@@ -41,7 +41,6 @@ export class AppStateService {
     }
 
     setMobileMenu(value: boolean): void {
-        console.log('Setting mobile menu:', value);
         this.mobileMenuSubject.next(value);
     }
 
@@ -79,7 +78,6 @@ export class AppStateService {
     }
 
     setInitDone(done: boolean): void {
-        console.log('Setting init done:', done);
         this.initDone = done;
     }
 

@@ -27,6 +27,12 @@
         </ul>
     </li>
 
+    <li>
+        <a routerLink="/manage-orders" (click)="closeMobileMenu()">
+            Orders
+        </a>
+    </li>
+
     <li *ngIf="!appState.isUserAdmin()">
         <a routerLink="/" (click)="closeMobileMenu()">
             Shop

@@ -78,3 +78,25 @@ input.ng-invalid.ng-touched {
 .fa-spinner {
     margin-right: 0.5rem;
 }
+
+select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 1rem;
+    color: #333;
+}
+
+select:focus {
+    outline: none;
+    border-color: #e5b80b;
+    box-shadow: 0 0 0 2px rgba(229, 184, 11, 0.2);
+}
+
+.loading-text {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+}
