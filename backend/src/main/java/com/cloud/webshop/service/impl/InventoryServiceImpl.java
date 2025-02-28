@@ -63,4 +63,9 @@ public class InventoryServiceImpl implements InventoryService {
         Inventory savedInventory = inventoryRepository.save(inventory);
         return InventoryResponse.mapToInventoryResponse(savedInventory);
     }
+
+    @Override
+    public void deleteInventory(Long inventoryId) {
+        inventoryRepository.deleteById(inventoryId);
+    }
 }

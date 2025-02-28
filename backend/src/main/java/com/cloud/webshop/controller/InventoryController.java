@@ -1,11 +1,9 @@
 package com.cloud.webshop.controller;
 
 import com.cloud.webshop.model.Inventory;
-import com.cloud.webshop.model.Product;
 import com.cloud.webshop.request.InventoryRequest;
 import com.cloud.webshop.response.ApiResponse;
 import com.cloud.webshop.response.InventoryResponse;
-import com.cloud.webshop.response.ProductResponse;
 import com.cloud.webshop.service.InventoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,7 +74,7 @@ public class InventoryController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/upsert")
     @Operation(
             summary = "Create or update a product's inventory",
             description = "Create or update a product's inventory"
@@ -88,6 +85,21 @@ public class InventoryController {
                 "Ok",
                 request.getInventoryId() != null ? "Inventory updated successfully" : "Inventory created successfully",
                 inventoryResponse
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{inventoryId}")
+    @Operation(
+            summary = "Delete an inventory",
+            description = "Delete an inventory from the system"
+    )
+    public ResponseEntity<ApiResponse<Void>> deleteInventory(@PathVariable Long inventoryId) {
+        inventoryService.deleteInventory(inventoryId);
+        ApiResponse<Void> response = new ApiResponse<>(
+                "success",
+                "Inventory deleted successfully",
+                null
         );
         return ResponseEntity.ok(response);
     }
