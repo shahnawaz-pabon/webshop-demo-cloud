@@ -17,20 +17,49 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
-  .order-header {
+  .order-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #444;
   }
   
-  .order-amount {
-    font-size: 1.5rem;
+  .order-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .order-id {
+    font-family: monospace;
+    font-size: 1.1rem;
     color: #e5b80b;
   }
   
   .order-date {
     color: #888;
+    font-size: 0.9rem;
+  }
+  
+  .order-items {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #444;
+  }
+  
+  .order-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    color: #e5b80b;
+  }
+  
+  .order-amount {
+    font-size: 1.5rem;
+    color: #e5b80b;
   }
   
   .order-status {
@@ -55,71 +84,11 @@
     color: white;
   }
   
-  .order-details {
-    margin-bottom: 1rem;
-    padding: 1rem 0;
-    border-bottom: 1px solid #444;
-  }
-  
-  .order-id {
-    color: #888;
-    font-family: monospace;
-  }
-  
-  .order-email {
-    color: #e5b80b;
-  }
-  
-  .order-items {
-    margin-bottom: 1rem;
-  }
-  
   .order-item {
     display: flex;
     justify-content: space-between;
     padding: 0.5rem 0;
     color: #ddd;
-  }
-  
-  .order-actions {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  select {
-    padding: 0.5rem;
-    border-radius: 4px;
-    background-color: #444;
-    color: white;
-    border: 1px solid #666;
-  }
-  
-  .update-btn {
-    padding: 0.5rem 1rem;
-    background-color: #e5b80b;
-    color: #2c2c2c;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .update-btn:hover {
-    background-color: #f6c721;
-  }
-  
-  select:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-  
-  .update-btn.disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background-color: #cccccc;
-  }
-  
-  .update-btn.disabled:hover {
-    background-color: #cccccc;
   }
   
   @media (max-width: 768px) {
