@@ -1,0 +1,45 @@
+<div class="inventory-form-container">
+  <h2>Add Inventory</h2>
+  
+  <form (ngSubmit)="onSubmit()" #inventoryForm="ngForm">
+    <div class="form-group">
+      <label for="productId">Product ID</label>
+      <input 
+        type="number" 
+        id="productId" 
+        name="productId"
+        [(ngModel)]="inventory.productId" 
+        required>
+    </div>
+
+    <div class="form-group">
+      <label for="quantity">Stock Level</label>
+      <input 
+        type="number" 
+        id="quantity" 
+        name="quantity"
+        [(ngModel)]="inventory.quantity" 
+        required
+        min="1">
+    </div>
+
+    <div class="form-group">
+      <label for="supplier">Supplier ID</label>
+      <input 
+        type="number" 
+        id="supplier" 
+        name="supplier"
+        [(ngModel)]="inventory.supplier" 
+        required>
+    </div>
+
+    <button 
+      type="submit" 
+      [disabled]="!inventoryForm.form.valid || isSubmitting">
+      <span *ngIf="!isSubmitting">Add Inventory</span>
+      <span *ngIf="isSubmitting">
+        <i class="fas fa-spinner fa-spin"></i> Adding...
+      </span>
+    </button>
+  </form>
+</div> 

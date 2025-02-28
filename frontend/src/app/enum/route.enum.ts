@@ -7,5 +7,8 @@ export enum RouteEnum {
     getOrders = 'get-orders',
     manageOrders = 'manage-orders',
     getAccount = 'get-account',
+    getInventory = 'get-inventory',
+    addNewInventory = 'add-new-inventory',
     addSupplier = 'add-supplier'
+
 } 

@@ -12,8 +12,9 @@ import {
     loadProductDetailComponentLazily,
     loadProductListComponentLazily,
     loadSignupComponentLazily,
-    loadAddSupplierComponentLazily,
-    loadManageOrdersComponentLazily
+    loadManageOrdersComponentLazily,
+    loadAddInventoryComponentLazily,
+    loadAddSupplierComponentLazily
 } from "./shared/utils/lazy-loading.utils";
 
 //function guards
@@ -65,6 +66,45 @@ export const appRoutes: Routes = [
 
         ]
     },
+    {
+        path: 'inventory',
+        children: [
+            {
+                path: '',
+                loadComponent: loadProductListComponentLazily,
+                canActivate: [canActivateGuard],
+                data: { id: RouteEnum.getInventory }
+            },
+
+            {
+                path: 'new',
+                loadComponent: loadAddInventoryComponentLazily,
+                canActivate: [canActivateGuard],
+                data: { id: RouteEnum.addNewInventory }
+            },
+
+            {
+                path: ':productId',
+                children: [
+                    {
+                        path: '',
+                        loadComponent: loadProductDetailComponentLazily,
+                        canActivate: [canActivateGuard],
+                        data: { id: RouteEnum.getOneProduct }
+                    },
+
+                    {
+                        path: 'edit',
+                        loadComponent: loadProductAddComponentLazily,
+                        canActivate: [canActivateGuard],
+                        data: { id: RouteEnum.editOneProduct }
+                    }
+                ]
+            },
+
+        ]
+    },
+
 
     {
         path: 'add-supplier',
