@@ -41,7 +41,7 @@
     <li *ngIf="!appState.isUserAdmin()">
         <a class="cart-actions" routerLink="/cart" (click)="closeMobileMenu()">
             <span>Cart</span>
-            <span id="cart-items-number" class="badge">{{ appState.getCartLength() }}</span>
+            <!-- <span id="cart-items-number" class="badge">{{ appState.getCartLength() }}</span> -->
         </a>
     </li>
 
