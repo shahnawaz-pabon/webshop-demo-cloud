@@ -38,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
         // Create a Pageable object for pagination
         Pageable pageable = PageRequest.of(page, size);
 
-        // Fetch products with inventory and apply keyword search
+        // Fetch products with keyword search (if provided)
         Page<Product> productPage;
         if (keyword != null && !keyword.isEmpty()) {
             productPage = productRepository.findByTitleContainingOrCategoryContaining(keyword, pageable);
@@ -48,41 +48,41 @@ public class ProductServiceImpl implements ProductService {
 
         // Map products to ProductResponse with available quantity
         List<ProductResponse> productResponses = productPage.getContent().stream()
-                .filter(product -> {
-                    // Filter products that have inventory
-                    List<Inventory> inventories = inventoryRepository.findByProductId(product.getProductId());
-                    return !inventories.isEmpty();
-                })
                 .map(product -> {
+                    // Create ProductResponse
                     ProductResponse response = ProductResponse.toProductResponse(product);
+
                     // Calculate available quantity
-                    int availableQuantity = inventoryRepository.findByProductId(product.getProductId())
-                            .stream()
+                    List<Inventory> inventories = inventoryRepository.findByProductId(product.getProductId());
+                    int availableQuantity = inventories.stream()
                             .mapToInt(Inventory::getStockLevel)
                             .sum();
-                    response.setQuantity(availableQuantity);
+                    response.setQuantity(availableQuantity); // Set quantity (0 if no inventory exists)
+
                     return response;
                 })
                 .collect(Collectors.toList());
 
-        // Create a custom page for the filtered results
-        Page<ProductResponse> filteredPage = new PageImpl<>(
+        // Create a custom page for the results
+        Page<ProductResponse> resultPage = new PageImpl<>(
                 productResponses,
                 pageable,
-                productResponses.size()
+                productPage.getTotalElements() // Use the total elements from the original query
         );
 
         // Return paginated response
         return new ApiResponse<>(
                 "success",
                 "Products retrieved successfully",
-                filteredPage.getContent(),
-                filteredPage.getNumber(),
-                filteredPage.getSize(),
-                filteredPage.getTotalPages(),
-                filteredPage.getTotalElements()
+                resultPage.getContent(),
+                resultPage.getNumber(),
+                resultPage.getSize(),
+                resultPage.getTotalPages(),
+                resultPage.getTotalElements()
         );
     }
+
+
     @Override
     public ProductResponse addProduct(ProductRequest request) {
         // Create a new product
