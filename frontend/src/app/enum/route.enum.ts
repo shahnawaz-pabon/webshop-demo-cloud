@@ -5,5 +5,7 @@ export enum RouteEnum {
     editOneProduct = 'edit-one-product',
     getCart = 'get-cart',
     getOrders = 'get-orders',
-    getAccount = 'get-account'
+    getAccount = 'get-account',
+    getInventory = 'get-inventory',
+    addNewInventory = 'add-new-inventory'
 } 

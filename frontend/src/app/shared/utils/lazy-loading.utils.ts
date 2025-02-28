@@ -7,4 +7,7 @@ export const loadSignupComponentLazily = () => import('../../features/auth/signu
 export const loadLoginComponentLazily = () => import('../../features/auth/login/login.component').then(m => m.LoginComponent);
 export const loadAccountComponentLazily = () => import('../../features/account/account.component').then(m => m.AccountComponent);
 export const loadGeneralErrorComponentLazily = () => import('../../shared/components/general-error/general-error.component').then(m => m.GeneralErrorComponent);
-export const loadPaymentResultComponentLazily = () => import('../../features/payment/payment-result/payment-result.component').then(m => m.PaymentResultComponent); 
+export const loadPaymentResultComponentLazily = () => import('../../features/payment/payment-result/payment-result.component').then(m => m.PaymentResultComponent);
+export const loadAddInventoryComponentLazily = () => 
+  import('../../features/inventory/add-inventory/add-inventory.component')
+    .then(m => m.AddInventoryComponent); 
