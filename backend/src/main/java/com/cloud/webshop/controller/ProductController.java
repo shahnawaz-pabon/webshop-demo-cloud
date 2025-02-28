@@ -1,12 +1,14 @@
 package com.cloud.webshop.controller;
 
 import com.cloud.webshop.model.Product;
+import com.cloud.webshop.request.ProductRequest;
 import com.cloud.webshop.response.ProductResponse;
 import com.cloud.webshop.response.ApiResponse;
 import com.cloud.webshop.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,5 +53,15 @@ public class ProductController {
         );
 
         return ResponseEntity.ok(response);
+    }
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse<ProductResponse>> addProduct(@RequestBody ProductRequest request) {
+        ProductResponse productResponse = productService.addProduct(request);
+        ApiResponse<ProductResponse> response = new ApiResponse<>(
+                "created",
+                "Product added successfully",
+                productResponse
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
