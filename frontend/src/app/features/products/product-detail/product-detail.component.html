@@ -12,4 +12,9 @@
 
     <p id="product-description">{{ product.getDescription() }}</p>
 
+    <div class="admin-actions">
+        <button class="btn btn-update" (click)="updateProduct()">Update Product</button>
+        <button class="btn btn-delete" (click)="deleteProduct()">Delete Product</button>
+    </div>
+
 </section>

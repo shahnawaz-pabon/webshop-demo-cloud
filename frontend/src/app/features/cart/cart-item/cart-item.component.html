@@ -23,13 +23,14 @@
                     <input 
                         #quantityRef
                         type="number" 
-                        [value]="cartItem.quantity">
+                        [value]="cartItem.quantity"
+                        min="1">
                     <span class="cart-item-quantity">x
                         <span>{{ cartItem.quantity }}</span>
                     </span>
                 </p>
                 <p class="cart-item-actions">
-                    <button class="btn btn-alt" (click)="saveCartItem('no')">Update</button>
+                    <button class="btn btn-alt" (click)="updateCartItem()">Update</button>
                     <button class="btn btn-alt cart-item-delete" (click)="deleteCartItem()">X</button>
                 </p>
             </div>

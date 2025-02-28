@@ -8,6 +8,7 @@ import { CartItemComponent } from './cart-item/cart-item.component';
 import { CartItem } from '../../model/interfaces/cart-item.interface';
 import { Product } from '../../model/interfaces/product.interface';
 import { ShoppingCart } from '../../model/interfaces/shopping-cart.interface';
+import { RestService } from '../../services/rest.service';
 
 @Component({
   selector: 'app-cart',
@@ -27,17 +28,18 @@ export class CartComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private restService: RestService
   ) {
     this.stripePromise = loadStripe(this.stripePublicKey);
   }
 
   ngOnInit(): void {
     this.cartService.getCart().subscribe((data: ShoppingCart) => {
-      this.cart = data.cart;
-      this.totalPrice = data.totalPrice;
-      this.totalLength = data.totalLength || 0;
-      console.log('Cart data:', this.cart);
+      this.cart = data.data.cart;
+      this.totalPrice = data.data.totalPrice;
+      this.totalLength = data.data.totalLength || 0;
+      console.log('Cart dataaaaaaaaaaaaaaaaaa:', data);
     });
 
     // Handle payment success/cancel scenarios

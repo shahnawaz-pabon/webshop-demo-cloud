@@ -51,3 +51,31 @@
     text-align: left;
   }
 }
+
+.admin-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: var(--color-gray-600);
+    border-radius: 6px;
+}
+
+@media(min-width: 768px) {
+    .admin-actions {
+        justify-content: flex-end;
+    }
+}
+
+.btn-update {
+    background-color: var(--color-primary-600);
+}
+
+.btn-delete {
+    background-color: var(--color-error-500);
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
