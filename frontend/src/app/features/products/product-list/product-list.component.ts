@@ -63,13 +63,8 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
       undefined
     ).subscribe({
       next: (response) => {
-        console.log('Full response structure:', JSON.stringify(response, null, 2));
-        console.log('Response type:', typeof response);
-        console.log('Response body:', response.body);
         if (response.body) {
           console.log('Body content:', response.body.content);
-          console.log('Total elements:', response.body.totalElements);
-          console.log('Total pages:', response.body.totalPages);
         }
         this.handleResponse(response.body);
       },
@@ -141,10 +136,13 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
       const products = response.data.map((item: any) => new Product(
         item.productId,
         item.title,
-        item.summary || '',
+        item.summary,
         item.price,
         item.description,
-        item.imageUrl || ''
+        item.imageUrl,
+        item.quantity,
+        item.inventoryId,
+        item.supplierId
       ));
 
       console.log('Mapped products:', products);

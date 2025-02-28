@@ -10,6 +10,8 @@ import { CartItemResponse } from '../model/interfaces/cart-item.interface';
 import { CartItem } from '../model/cart-item.model';
 import { ShoppingCart } from '../model/shopping-cart.model';
 import { SupplierResponse, SupplierListResponse } from '../model/interfaces/supplier.interface';
+import { ProductResponse, ProductListResponse } from '../model/interfaces/product.interface';
+import { InventoryUpsertRequest } from '../model/interfaces/inventory.interface';
 
 
 interface ProductRequestBuilder {
@@ -120,7 +122,10 @@ export class RestService {
                         item.summary,
                         item.price,
                         item.description,
-                        item.imageUrl
+                        item.imageUrl,
+                        item.quantity,
+                        item.inventoryId,
+                        item.supplierId
                     )
                 );
                 this.appState.setProductList(products);
@@ -226,6 +231,28 @@ export class RestService {
     getSupplierList(page: number, size: number): Observable<HttpResponse<SupplierListResponse>> {
         return this.http.get<SupplierListResponse>(
             `${this.baseUrl}/supplier/list?page=${page}&size=${size}`,
+            { observe: 'response' }
+        );
+    }
+
+    getAllProducts(): Observable<HttpResponse<ProductListResponse>> {
+        return this.http.get<ProductListResponse>(
+            `${this.baseUrl}/product/list-all`,
+            { observe: 'response' }
+        );
+    }
+
+    getProductById(productId: number): Observable<HttpResponse<ProductResponse>> {
+        return this.http.get<ProductResponse>(
+            `${this.baseUrl}/product/${productId}`,
+            { observe: 'response' }
+        );
+    }
+
+    upsertInventory(request: InventoryUpsertRequest): Observable<HttpResponse<any>> {
+        return this.http.post<any>(
+            `${this.baseUrl}/inventory/upsert`,
+            request,
             { observe: 'response' }
         );
     }

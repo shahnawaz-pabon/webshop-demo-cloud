@@ -168,3 +168,65 @@
     }
   }
   
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.centered-dialog {
+    position: fixed !important;
+    top: 20% !important;
+    left: 50% !important;
+    transform: translate(-50%, 0) !important;
+    margin: 0 !important;
+}
+
+/* Dialog styles */
+.mat-mdc-dialog-container {
+    --mdc-dialog-container-color: #2c2c2c;
+    color: white;
+}
+
+.mat-mdc-dialog-surface {
+    border-radius: 8px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Dialog text colors */
+.mat-mdc-dialog-title {
+    color: white !important;
+}
+
+.mat-mdc-dialog-content {
+    color: white !important;
+}
+
+/* Dialog buttons */
+.mat-mdc-button {
+    color: white !important;
+}
+
+.mat-mdc-button[color="warn"] {
+    background-color: #dc3545 !important;
+}
+
+.mat-mdc-dialog-actions {
+    padding: 16px !important;
+}
+
+/* Override Material Dialog positioning */
+.cdk-global-overlay-wrapper {
+    display: flex;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 100px;  /* This will position dialog from top */
+}
+
+.cdk-overlay-pane {
+    margin: auto;
+    position: static !important;
+}

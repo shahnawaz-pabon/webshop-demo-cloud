@@ -7,6 +7,9 @@ export class Product {
         private price: number,
         private description: string,
         private imageUrl: string,
+        private quantity: number,
+        private inventoryId?: number,
+        private supplierId?: number
     ) { }
 
     static getClassName(): string {
@@ -59,6 +62,22 @@ export class Product {
 
     setImageUrl(imageUrl: string) {
         this.imageUrl = imageUrl;
+    }
+
+    getQuantity(): number | undefined {
+        return this.quantity;
+    }
+
+    getInventoryId(): number | undefined {
+        return this.inventoryId;
+    }
+
+    getSupplierId(): number | undefined {
+        return this.supplierId;
+    }
+
+    setSupplierId(supplierId: number) {
+        this.supplierId = supplierId;
     }
 
 }
