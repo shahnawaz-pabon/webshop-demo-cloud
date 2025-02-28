@@ -15,8 +15,9 @@ export class GuardService {
         return true; // Add your guard logic here
     }
 
-    loadProducts(page: number, isAdmin: boolean): Observable<any> {
-        const requestObservable = this.restService.getProductRequestBuilder().getProducts(page);
+    loadProducts(page: number, isAdmin: boolean, keyword?: string, isAvailable: boolean = true): Observable<any> {
+        const requestObservable = this.restService.getProductRequestBuilder()
+            .getProducts(page, 1000, keyword, isAvailable);
         const responseHandler = this.restService.getProductResponseHandler();
 
         requestObservable.subscribe({
