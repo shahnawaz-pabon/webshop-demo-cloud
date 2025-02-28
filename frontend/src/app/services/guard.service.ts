@@ -24,28 +24,15 @@ export class GuardService {
     loadProducts(page: number, isAdmin: boolean, searchKeyword?: string, isAvailable?: boolean): Observable<any> {
         // Different URL and parameters for initial load vs search
         if (!searchKeyword && isAvailable === undefined) {
-            // Initial load - use default pagination
-            return this.http.get<ProductResponse>(`${this.apiUrl}/product/list?page=${page}&size=10`, {
+            // Initial load - use default pagination and isAvailable=false
+            return this.http.get<ProductResponse>(
+                `${this.apiUrl}/product/list?page=${page}&size=10&isAvailable=false`, {
                 observe: 'response',
                 headers: this.restService.getHeaders(isAdmin)
-            }).pipe(
-                map(response => {
-
-                    const body = response.body as ProductResponse;
-                    return {
-                        ...response,
-                        body: {
-                            content: body.data,
-                            totalElements: body.totalItems,
-                            totalPages: body.totalPages,
-                            page: body.page
-                        }
-                    };
-                })
-            );
+            });
         } else {
             // Search functionality - use search parameters
-            let url = `${this.apiUrl}/products/list?page=${page}&size=1000`;
+            let url = `${this.apiUrl}/product/list?page=${page}&size=10`;
 
             if (searchKeyword) {
                 url += `&keyword=${searchKeyword}`;

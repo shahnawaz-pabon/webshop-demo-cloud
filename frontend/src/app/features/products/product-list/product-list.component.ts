@@ -103,29 +103,20 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.componentLoaded) {
           const page = PaginationUtils.getSelectedPage(queryParams);
 
-          // If we're in search mode (has keyword or isAvailable), use search pagination
-          if (this.searchKeyword || this.isAvailable) {
-            const productSub = this.guardService.loadProducts(
-              page,
-              this.appState.isUserAdmin(),
-              this.searchKeyword,
-              this.isAvailable ? true : undefined
-            ).subscribe();
-            this.guardService.addSubscriptionFromOutside(productSub);
-          } else {
-            // Otherwise use regular pagination
-            const productSub = this.guardService.loadProducts(
-              page,
-              this.appState.isUserAdmin(),
-              undefined,
-              undefined
-            ).subscribe();
-            this.guardService.addSubscriptionFromOutside(productSub);
-          }
+          const productSub = this.guardService.loadProducts(
+            page,
+            this.appState.isUserAdmin(),
+            this.searchKeyword,
+            this.isAvailable ? true : undefined
+          ).subscribe({
+            next: (response) => {
+              this.handleResponse(response.body);
+            }
+          });
+          this.guardService.addSubscriptionFromOutside(productSub);
         }
       }
     );
-
     this.subscriptions.push(sub);
   }
 
@@ -143,42 +134,30 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleResponse(response: any) {
-    console.log('Handle Response called with:', response);
+    console.log('=== Response Debug ===');
+    console.log('Raw response:', response);
 
-    if (response) {
-      // Update the product list in AppStateService
-      if (response.content) {  // The data is in response.content, not response.data
-        console.log('Raw product data:', response.content);
+    if (response && response.data) {
+      const products = response.data.map((item: any) => new Product(
+        item.productId,
+        item.title,
+        item.summary || '',
+        item.price,
+        item.description,
+        item.imageUrl || ''
+      ));
 
-        // Map the raw data to Product objects
-        const products = response.content.map((item: any) => new Product(
-          item.productId,
-          item.title,
-          item.summary || '',  // Add default empty string if summary is missing
-          item.price,
-          item.description,
-          item.imageUrl || ''  // Add default empty string if imageUrl is missing
-        ));
+      console.log('Mapped products:', products);
+      this.appState.setProductList(products);
 
-        console.log('Mapped products:', products);
-        this.appState.setProductList(products);
-        this.appState.setProductsTotalCount(response.totalElements);
-      } else {
-        console.warn('No content in response');
-        this.appState.setProductList([]);
-      }
-
-      const totalPages = response.totalPages || 0;
-      const currentPage = response.page || 0;
-
-      console.log('Pagination values:', { totalPages, currentPage });
-
+      // Update pagination and total count
+      this.appState.setProductsTotalCount(response.totalItems);
       this.appState.controlPagination.next({
-        maxPage: totalPages,
-        currentPage: currentPage
+        maxPage: response.totalPages,
+        currentPage: response.page
       });
     } else {
-      console.warn('No response received in handleResponse');
+      console.warn('Invalid response structure');
       this.appState.setProductList([]);
     }
   }
@@ -190,8 +169,6 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   executeSearch() {
     this.isSearching = true;
     const page = 0;
-
-    // Only include isAvailable in the request if checkbox is checked
     const availableFlag = this.isAvailable ? true : undefined;
 
     this.guardService.loadProducts(
@@ -201,7 +178,6 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
       availableFlag
     ).subscribe({
       next: (response) => {
-        console.log('Search response:', response);
         this.handleResponse(response.body);
         this.isSearching = false;
       },

@@ -42,7 +42,6 @@ export class NavigationItemsComponent implements OnInit, OnChanges, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    console.log('Navigation Items Component Initialized');
     this.logState();
     //since this component is instanciated twice (desktop + mobile menu), prevent from subscribing twice to controlCartRecovery subject
     if (!NavigationItemsComponent.controlCartRecovery_INIT) {
@@ -56,7 +55,6 @@ export class NavigationItemsComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['isMobileMenu']) {
-      console.log('Mobile menu input changed:', this.isMobileMenu);
       this.logState();
     }
   }
