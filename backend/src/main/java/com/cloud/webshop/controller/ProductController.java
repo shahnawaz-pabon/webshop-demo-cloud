@@ -2,6 +2,7 @@ package com.cloud.webshop.controller;
 
 import com.cloud.webshop.model.Product;
 import com.cloud.webshop.request.ProductRequest;
+import com.cloud.webshop.response.ProductNameResponse;
 import com.cloud.webshop.response.ProductResponse;
 import com.cloud.webshop.response.ApiResponse;
 import com.cloud.webshop.service.ProductService;
@@ -31,8 +32,9 @@ public class ProductController {
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String keyword) {
-        ApiResponse<List<ProductResponse>> response = productService.getAllProducts(page, size, keyword);
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false, defaultValue = "false") boolean isAvailable) {
+        ApiResponse<List<ProductResponse>> response = productService.getAllProducts(page, size, keyword, isAvailable);
         return ResponseEntity.ok(response);
     }
 
@@ -63,5 +65,22 @@ public class ProductController {
                 productResponse
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/list-all")
+    @Operation(
+            summary = "Get all products",
+            description = "Retrieve a paginated list of all products."
+    )
+    public ResponseEntity<ApiResponse<List<ProductNameResponse>>> getAllProducts() {
+        List<ProductNameResponse> products = productService.getProductList();
+
+        ApiResponse<List<ProductNameResponse>> response = new ApiResponse<>(
+                "success",
+                "Products retrieved successfully",
+                products
+        );
+
+        return ResponseEntity.ok(response);
     }
 }
