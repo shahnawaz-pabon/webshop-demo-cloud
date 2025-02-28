@@ -7,6 +7,7 @@ interface InventoryPayload {
     productId: number;
     supplierId: number;
     stockLevel: number;
+    inventoryId?: number;
 }
 
 @Injectable({
@@ -20,15 +21,24 @@ export class InventoryService {
     upsertInventory(inventoryData: {
         productId: string,
         quantity: number,
-        supplier: string
+        supplierId: string,
+        inventoryId?: number
     }): Observable<any> {
         // Transform the data to match API requirements
         const payload: InventoryPayload = {
             productId: parseInt(inventoryData.productId),
-            supplierId: parseInt(inventoryData.supplier),
-            stockLevel: inventoryData.quantity
+            supplierId: parseInt(inventoryData.supplierId),
+            stockLevel: inventoryData.quantity  
         };
 
+        if (inventoryData.inventoryId) {
+            payload.inventoryId = inventoryData.inventoryId;
+        }
+
         return this.http.post(`${this.apiUrl}/inventory/upsert`, payload);
+    }
+
+    deleteInventory(inventoryId: number): Observable<any> {
+        return this.http.delete(`${this.apiUrl}/inventory/${inventoryId}`);
     }
 } 

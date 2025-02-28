@@ -4,7 +4,7 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RestService } from './rest.service';
-import { ProductResponse } from '../model/interfaces/product.interface';
+import { ProductListResponse } from '../model/interfaces/product.interface';
 
 @Injectable({
     providedIn: 'root'
@@ -25,7 +25,7 @@ export class GuardService {
         // Different URL and parameters for initial load vs search
         if (!searchKeyword && isAvailable === undefined) {
             // Initial load - use default pagination and isAvailable=false
-            return this.http.get<ProductResponse>(
+            return this.http.get<ProductListResponse>(
                 `${this.apiUrl}/product/list?page=${page}&size=10&isAvailable=false`, {
                 observe: 'response',
                 headers: this.restService.getHeaders(isAdmin)

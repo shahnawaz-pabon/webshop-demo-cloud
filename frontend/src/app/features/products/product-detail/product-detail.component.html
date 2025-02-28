@@ -7,14 +7,23 @@
             <button class="btn" (click)="saveCartItem(1)">Add to Cart</button>
             <p>{{ product.getPrice() | currency }}</p>
             <p>{{ product.getSummary() }}</p>
+
+    
+            <div class="detail-row" *ngIf="product.getQuantity() !== undefined">
+                <span class="label">Stock Level:</span>
+                <span class="value">{{ product.getQuantity() }}</span>
+            </div>
         </div>
     </header>
 
     <p id="product-description">{{ product.getDescription() }}</p>
 
+
     <div class="admin-actions">
-        <button class="btn btn-update" (click)="updateProduct()">Update Product</button>
-        <button class="btn btn-delete" (click)="deleteProduct()">Delete Product</button>
+        <button class="btn btn-update" (click)="updateInventory()">Update Inventory</button>
+        <!-- <button class="btn btn-update" (click)="updateProduct()">Update Product</button> -->
+        <button class="btn btn-delete" (click)="deleteInventory()">Delete Inventory</button>
+        <!-- <button class="btn btn-delete" (click)="deleteProduct()">Delete Product</button> -->
     </div>
 
 </section>
