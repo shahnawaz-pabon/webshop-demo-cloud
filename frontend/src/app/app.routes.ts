@@ -8,11 +8,11 @@ import {
     loadGeneralErrorComponentLazily,
     loadProductAddComponentLazily,
     loadLoginComponentLazily,
-    loadOrdersComponentLazily,
     loadPaymentResultComponentLazily,
     loadProductDetailComponentLazily,
     loadProductListComponentLazily,
     loadSignupComponentLazily,
+    loadManageOrdersComponentLazily,
     loadAddInventoryComponentLazily,
     loadAddSupplierComponentLazily
 } from "./shared/utils/lazy-loading.utils";
@@ -121,10 +121,10 @@ export const appRoutes: Routes = [
     },
 
     {
-        path: 'orders',
-        loadComponent: loadOrdersComponentLazily,
+        path: 'manage-orders',
+        loadComponent: loadManageOrdersComponentLazily,
         canActivate: [canActivateGuard],
-        data: { id: RouteEnum.getOrders }
+        data: { id: RouteEnum.manageOrders }
     },
 
     {

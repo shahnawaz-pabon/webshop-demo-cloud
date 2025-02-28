@@ -1,0 +1,41 @@
+<div class="manage-orders-container">
+    <h1>Manage Orders</h1>
+    
+    <div class="orders-list">
+      <div *ngFor="let order of orders" class="order-card">
+        <div class="order-header">
+          <span class="order-amount">${{ order.amount }}</span>
+          <span class="order-date">{{ order.date }}</span>
+          <span class="order-status" [ngClass]="order.status.toLowerCase()">{{ order.status }}</span>
+        </div>
+  
+        <div class="order-details">
+          <p class="order-id">N. {{ order.id }}</p>
+          <p class="order-email">{{ order.email }}</p>
+          <p class="order-address">{{ order.address }}</p>
+        </div>
+  
+        <div class="order-items">
+          <div *ngFor="let item of order.items" class="order-item">
+            <span>{{ item.name }}</span>
+            <span>${{ item.price }} ($ {{ item.price }} x {{ item.quantity }})</span>
+          </div>
+        </div>
+  
+        <div class="order-actions">
+          <select #statusSelect [value]="order.status" 
+                  [disabled]="order.status === 'FULFILLED'"
+                  (change)="updateOrderStatus(order.id, statusSelect.value)">
+            <option value="PENDING">Pending</option>
+            <option value="FULFILLED">Fulfilled</option>
+            <option value="CANCELLED">Cancelled</option>
+          </select>
+          <button class="update-btn" 
+                  [disabled]="order.status === 'FULFILLED'"
+                  [class.disabled]="order.status === 'FULFILLED'">
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div> 
