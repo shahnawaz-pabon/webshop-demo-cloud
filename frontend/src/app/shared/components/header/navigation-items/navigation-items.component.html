@@ -7,8 +7,21 @@
         </button>
     </li>
 
-    <li>
-        <a routerLink="/products/new" (click)="closeMobileMenu()">Add Product</a>
+    <li class="submenu-container">
+        <a (click)="toggleSubmenu($event)" class="submenu-trigger">
+            Manage Inventory
+        </a>
+        <ul class="submenu" [class.expanded]="isInventorySubmenuOpen">
+            <li>
+                <a routerLink="/" (click)="closeMobileMenu()">All Products</a>
+            </li>
+            <li>
+                <a routerLink="/products/new" (click)="closeMobileMenu()">Add Product</a>
+            </li>
+            <li>
+                <a routerLink="/products/new" (click)="closeMobileMenu()">Add Supplier</a>
+            </li>
+        </ul>
     </li>
 
     <li *ngIf="!appState.isUserAdmin()">

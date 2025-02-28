@@ -31,6 +31,8 @@ export class NavigationItemsComponent implements OnInit, OnChanges, OnDestroy {
 
   static controlCartRecovery_INIT: boolean = false;
 
+  isInventorySubmenuOpen = false;
+
   constructor(
     public appState: AppStateService,
     private restService: RestService,
@@ -68,7 +70,13 @@ export class NavigationItemsComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
+  toggleSubmenu(event: Event) {
+    event.preventDefault();
+    this.isInventorySubmenuOpen = !this.isInventorySubmenuOpen;
+  }
+
   closeMobileMenu() {
+    this.isInventorySubmenuOpen = false;
     this.appState.setMobileMenu(false);
     WindowUtils.setBodyOverflow('visible');
   }
