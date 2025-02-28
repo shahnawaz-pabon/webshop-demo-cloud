@@ -2,6 +2,9 @@ package com.cloud.webshop.service.impl;
 
 import com.cloud.webshop.model.*;
 import com.cloud.webshop.repository.*;
+import com.cloud.webshop.response.CartItemResponse;
+import com.cloud.webshop.response.OrderHistoryResponse;
+import com.cloud.webshop.response.ProductResponse;
 import com.cloud.webshop.service.OrderService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,5 +119,63 @@ public class OrderServiceImpl implements OrderService {
         cartRepository.deleteByUserId(userId);
 
         return order;
+    }
+
+    @Override
+    public List<OrderHistoryResponse> getOrderHistory(Long userId) {
+        // Fetch orders for the user
+        List<Order> orders = orderRepository.findByUserId(userId);
+
+        // Map orders to OrderHistoryResponse
+        return orders.stream()
+                .map(this::mapToOrderHistoryResponse)
+                .collect(Collectors.toList());
+    }
+
+    private OrderHistoryResponse mapToOrderHistoryResponse(Order order) {
+        OrderHistoryResponse response = new OrderHistoryResponse();
+        response.setOrderId(order.getOrderId());
+        response.setFormattedDate(order.getOrderDate().toLocalDate().toString()); // Format date
+        response.setFormattedTime(order.getOrderDate().toLocalTime().toString()); // Format time
+        response.setStatus(order.getPaymentStatus());
+
+        // Map order products to CartItemResponse
+        List<CartItemResponse> cartItems = order.getOrderProducts().stream()
+                .map(this::mapToCartItemResponse)
+                .collect(Collectors.toList());
+        response.setCart(cartItems);
+
+        // Calculate total price and total length
+        double totalPrice = cartItems.stream()
+                .mapToDouble(CartItemResponse::getTotalPrice)
+                .sum(); // Use sum() for double
+
+        int totalLength = cartItems.stream()
+                .mapToInt(CartItemResponse::getQuantity)
+                .sum();
+
+        response.setTotalPrice(totalPrice);
+        response.setTotalLength(totalLength);
+
+        return response;
+    }
+
+    private CartItemResponse mapToCartItemResponse(OrderProduct orderProduct) {
+        CartItemResponse response = new CartItemResponse();
+        response.setProduct(mapToProductResponse(orderProduct.getProduct()));
+        response.setQuantity(orderProduct.getQuantity());
+        response.setTotalPrice(orderProduct.getProduct().getPrice() * orderProduct.getQuantity());
+        return response;
+    }
+
+    private ProductResponse mapToProductResponse(Product product) {
+        ProductResponse response = new ProductResponse();
+        response.setProductId(product.getProductId());
+        response.setTitle(product.getTitle());
+        response.setCategory(product.getSummary());
+        response.setPrice(product.getPrice());
+        response.setDescription(product.getDescription());
+        response.setImageUrl(product.getImageUrl());
+        return response;
     }
 }
