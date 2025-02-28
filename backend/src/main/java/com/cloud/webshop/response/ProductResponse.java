@@ -1,10 +1,14 @@
 package com.cloud.webshop.response;
 
 import com.cloud.webshop.model.Product;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ProductResponse {
     private Long productId;
@@ -14,6 +18,7 @@ public class ProductResponse {
     private Double price;
     private String imageUrl;
     private int quantity;
+    private Long inventoryId;
 
     // Convert Product entity to ProductResponse
     public static ProductResponse toProductResponse(Product product) {
