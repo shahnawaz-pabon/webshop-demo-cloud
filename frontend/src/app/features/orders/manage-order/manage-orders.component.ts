@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { OrderService } from '../../../services/order.service';
+import { AppStateService } from '../../../services/app-state.service';
+import { Order, OrderResponse } from '../../../model/interfaces/order.interface';
 
 @Component({
   selector: 'app-manage-orders',
@@ -10,29 +13,24 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./manage-orders.component.css']
 })
 export class ManageOrdersComponent implements OnInit {
-  orders = [
-    {
-      id: '5548f609-0608-4652-b009-755f917ee6be',
-      amount: 124.78,
-      date: '2024/02/15 - 08:59:04',
-      status: 'FULFILLED',
-      email: 'mimmo@test.com',
-      address: 'Street - Code - City',
-      items: [
-        { name: 'Uncharted 4 A Thief\'s End', price: 29.90, quantity: 2 },
-        { name: 'The Last Of Us Part 2', price: 44.99, quantity: 1 },
-        { name: 'Assassin\'s Creed The Ezio Collection', price: 19.99, quantity: 1 }
-      ]
-    }
-    // Add more orders as needed
-  ];
+  orders: Order[] = [];
+
+  constructor(
+    private orderService: OrderService,
+    private appState: AppStateService
+  ) {}
 
   ngOnInit(): void {
-    // Load orders data
-  }
-
-  updateOrderStatus(orderId: string, status: string) {
-    // Implement status update logic
-    console.log(`Updating order ${orderId} to status: ${status}`);
+    const userId = 1;
+    if (userId) {
+      this.orderService.getOrderHistory(userId).subscribe({
+        next: (response) => {
+          this.orders = response.data;
+        },
+        error: (error) => {
+          console.error('Error fetching orders:', error);
+        }
+      });
+    }
   }
 } 
