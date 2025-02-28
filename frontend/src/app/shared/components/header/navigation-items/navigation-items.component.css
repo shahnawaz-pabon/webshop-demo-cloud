@@ -35,8 +35,24 @@
 }
 
 #back-arrow-btn {
-  border: none;
-  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  margin-right: 1rem;
+}
+
+/* Add styles for nav item links */
+.nav-items a {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  line-height: 1.2;
+  min-height: 44px; /* Minimum touch target size */
+}
+
+.nav-items a:hover {
+  background-color: var(--color-primary-100);
 }
 
 @media (min-width: 900px) {
