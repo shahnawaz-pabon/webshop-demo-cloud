@@ -9,4 +9,7 @@ import java.util.List;
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     @Query("SELECT inv FROM Inventory inv WHERE inv.product.productId = :productId")
     List<Inventory> findByProductId(Long productId);
+
+    @Query("SELECT inv FROM Inventory inv WHERE inv.product.productId in :productIds")
+    List<Inventory> findByProductIdIn(List<Long> productIds);
 }
