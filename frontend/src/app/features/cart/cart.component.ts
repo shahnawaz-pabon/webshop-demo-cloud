@@ -9,6 +9,8 @@ import { CartItem } from '../../model/interfaces/cart-item.interface';
 import { Product } from '../../model/interfaces/product.interface';
 import { ShoppingCart } from '../../model/interfaces/shopping-cart.interface';
 import { RestService } from '../../services/rest.service';
+import { AppStateService } from '../../services/app-state.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-cart',
@@ -29,7 +31,8 @@ export class CartComponent implements OnInit {
     private cartService: CartService,
     private route: ActivatedRoute,
     private router: Router,
-    private restService: RestService
+    private restService: RestService,
+    private appState: AppStateService
   ) {
     this.stripePromise = loadStripe(this.stripePublicKey);
   }
@@ -39,7 +42,10 @@ export class CartComponent implements OnInit {
       this.cart = data.data.cart;
       this.totalPrice = data.data.totalPrice;
       this.totalLength = data.data.totalLength || 0;
-      console.log('Cart dataaaaaaaaaaaaaaaaaa:', data);
+         // Update the cart count in AppState
+      const cartCount = this.cart.map(item => item.quantity).reduce((acc, curr) => acc + curr, 0);
+       this.appState.updateCartCount(cartCount);
+     
     });
 
     // Handle payment success/cancel scenarios
@@ -113,5 +119,16 @@ export class CartComponent implements OnInit {
   handlePaymentCancel(): void {
     alert('Payment was canceled. Please try again.');
     this.router.navigate(['/cart'], { queryParams: {} });
+  }
+
+  handleItemDeleted(cartItemId: number) {
+
+    this.cart = this.cart.filter(item => item.cartId !== cartItemId);
+    // Update total price
+    this.calculateTotalPrice();
+  }
+
+  calculateTotalPrice() {
+    this.totalPrice = this.cart.reduce((sum, item) => sum + item.totalPrice, 0);
   }
 }

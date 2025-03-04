@@ -4,7 +4,7 @@
         <img [src]="product.getImageUrl()" [alt]="product.getTitle()">
         
         <div class="product-item-content">
-            <div class="price">$ {{ product.getPrice() | formatPrice }}</div>
+            <div class="price"> {{ product.getPrice() | formatPrice }}</div>
             <h2>{{ product.getTitle() }}</h2>
             <p class="summary">{{ product.getSummary() }}</p>
             

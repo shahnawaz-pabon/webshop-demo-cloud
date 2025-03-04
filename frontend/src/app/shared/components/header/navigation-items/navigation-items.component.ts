@@ -1,4 +1,4 @@
-import { NgClass, NgIf, NgStyle, Location } from '@angular/common';
+import { NgClass, NgIf, NgStyle, Location, AsyncPipe } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, Input, OnDestroy, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
@@ -19,7 +19,8 @@ import { WindowUtils } from '../../../../shared/utils/window.utils';
     NgClass,
     NgStyle,
     RouterLink,
-    BackArrowIconComponent
+    BackArrowIconComponent,
+    AsyncPipe
   ]
 })
 export class NavigationItemsComponent implements OnInit, OnChanges, OnDestroy {
@@ -33,6 +34,8 @@ export class NavigationItemsComponent implements OnInit, OnChanges, OnDestroy {
 
   isInventorySubmenuOpen = false;
 
+  cartCount$ = this.appState.cartCount$;
+
   constructor(
     public appState: AppStateService,
     private restService: RestService,
@@ -43,13 +46,17 @@ export class NavigationItemsComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit(): void {
     this.logState();
-    //since this component is instanciated twice (desktop + mobile menu), prevent from subscribing twice to controlCartRecovery subject
+    
+    // Add debug logging for cart count
+    this.cartCount$.subscribe(count => {
+        console.log('Current cart count:', count);
+    });
+
     if (!NavigationItemsComponent.controlCartRecovery_INIT) {
-      this.controlCartRecovery();
-      NavigationItemsComponent.controlCartRecovery_INIT = true;
+        this.controlCartRecovery();
+        NavigationItemsComponent.controlCartRecovery_INIT = true;
     }
 
-    // Debug state
     this.appState.logState();
   }
 
