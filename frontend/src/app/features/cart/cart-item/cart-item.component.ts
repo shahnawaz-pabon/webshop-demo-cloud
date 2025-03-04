@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AppStateService } from '../../../services/app-state.service';
@@ -25,17 +25,21 @@ export class CartItemComponent implements OnDestroy {
   set cartItem(value: CartItem) {
     console.log('CartItem received:', value);
     this._cartItem = value;
+    this.cartItemId = value.cartId;
   }
   get cartItem(): CartItem {
     return this._cartItem!;
   }
   private _cartItem!: CartItem;
+  private cartItemId!: number;
 
   @ViewChild('quantityRef', { static: true }) quantityRef!: ElementRef;
 
   @ViewChild('cartItemRef', { static: true }) cartItemRef!: ElementRef;
 
-  subscriptions: Subscription[] = [];
+  private subscriptions: Subscription[] = [];
+
+  @Output() itemDeleted = new EventEmitter<number>();
 
   constructor(
     private restService: RestService,
@@ -77,7 +81,20 @@ export class CartItemComponent implements OnDestroy {
   }
 
   deleteCartItem() {
-    console.log('Delete cart item pressed');
+    this.restService.getCartRequestBuilder().deleteCartItem(this.cartItemId).subscribe({
+      next: (response) => {
+        console.log('Cart item deleted successfully:', response);
+        this.itemDeleted.emit(this.cartItemId);
+        
+        // Subscribe to get the current value
+        this.appState.cartCount$.subscribe(currentCount => {
+          this.appState.updateCartCount(currentCount - 1);
+        }).unsubscribe(); 
+      },
+      error: (error) => {
+        console.error('Error deleting cart item:', error);
+      }
+    });
   }
 
   ngOnDestroy(): void {

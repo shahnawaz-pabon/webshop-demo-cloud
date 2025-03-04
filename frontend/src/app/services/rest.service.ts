@@ -29,6 +29,7 @@ interface ProductResponseHandler {
 interface CartRequestBuilder {
     postCartItem: (cartItem: any) => Observable<HttpResponse<CartItemResponse>>;
     getCartList: () => Observable<HttpResponse<ShoppingCart>>;
+    deleteCartItem: (cartItemId: number) => Observable<HttpResponse<{ cartItemId: number }>>;
 }
 
 interface CartResponseHandler {
@@ -168,6 +169,12 @@ export class RestService {
             getCartList: (): Observable<HttpResponse<ShoppingCart>> => {
                 return this.http.get<ShoppingCart>(
                     `${this.baseUrl}/cart/list?userId=1`,  // Add userId parameter
+                    { observe: 'response' }
+                );
+            },
+            deleteCartItem: (cartItemId: number): Observable<HttpResponse<{ cartItemId: number }>> => {
+                return this.http.delete<{ cartItemId: number }>(
+                    `${this.baseUrl}/cart/${cartItemId}`,
                     { observe: 'response' }
                 );
             }

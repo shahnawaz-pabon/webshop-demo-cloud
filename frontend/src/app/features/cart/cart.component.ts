@@ -39,7 +39,7 @@ export class CartComponent implements OnInit {
       this.cart = data.data.cart;
       this.totalPrice = data.data.totalPrice;
       this.totalLength = data.data.totalLength || 0;
-      console.log('Cart dataaaaaaaaaaaaaaaaaa:', data);
+     
     });
 
     // Handle payment success/cancel scenarios
@@ -113,5 +113,16 @@ export class CartComponent implements OnInit {
   handlePaymentCancel(): void {
     alert('Payment was canceled. Please try again.');
     this.router.navigate(['/cart'], { queryParams: {} });
+  }
+
+  handleItemDeleted(cartItemId: number) {
+
+    this.cart = this.cart.filter(item => item.cartId !== cartItemId);
+    // Update total price
+    this.calculateTotalPrice();
+  }
+
+  calculateTotalPrice() {
+    this.totalPrice = this.cart.reduce((sum, item) => sum + item.totalPrice, 0);
   }
 }
