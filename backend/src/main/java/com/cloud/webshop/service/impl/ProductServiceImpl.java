@@ -5,6 +5,7 @@ import com.cloud.webshop.model.Product;
 import com.cloud.webshop.repository.InventoryRepository;
 import com.cloud.webshop.repository.ProductRepository;
 import com.cloud.webshop.response.ApiResponse;
+import com.cloud.webshop.response.MinMaxResponse;
 import com.cloud.webshop.response.ProductNameResponse;
 import com.cloud.webshop.response.ProductResponse;
 import com.cloud.webshop.service.ProductService;
@@ -125,6 +126,20 @@ public class ProductServiceImpl implements ProductService {
         return products.stream()
                 .map(ProductNameResponse::toProductResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MinMaxResponse getMinMaxValues() {
+        // Fetch min and max prices from the database
+        Double minPrice = productRepository.findMinPrice();
+        Double maxPrice = productRepository.findMaxPrice();
+
+        // Create the response
+        MinMaxResponse response = new MinMaxResponse();
+        response.setMinValue((int) (minPrice != null ? minPrice : 0));
+        response.setMaxValue((int) (maxPrice != null ? maxPrice : 0));
+
+        return response;
     }
 }
 
