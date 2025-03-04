@@ -9,6 +9,8 @@ import { CartItem } from '../../model/interfaces/cart-item.interface';
 import { Product } from '../../model/interfaces/product.interface';
 import { ShoppingCart } from '../../model/interfaces/shopping-cart.interface';
 import { RestService } from '../../services/rest.service';
+import { AppStateService } from '../../services/app-state.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-cart',
@@ -29,7 +31,8 @@ export class CartComponent implements OnInit {
     private cartService: CartService,
     private route: ActivatedRoute,
     private router: Router,
-    private restService: RestService
+    private restService: RestService,
+    private appState: AppStateService
   ) {
     this.stripePromise = loadStripe(this.stripePublicKey);
   }
@@ -39,6 +42,9 @@ export class CartComponent implements OnInit {
       this.cart = data.data.cart;
       this.totalPrice = data.data.totalPrice;
       this.totalLength = data.data.totalLength || 0;
+         // Update the cart count in AppState
+      const cartCount = this.cart.map(item => item.quantity).reduce((acc, curr) => acc + curr, 0);
+       this.appState.updateCartCount(cartCount);
      
     });
 

@@ -7,6 +7,7 @@ import { RestService } from '../../../services/rest.service';
 import { CartItem, CartItemResponse } from '../../../model/interfaces/cart-item.interface';
 import { FormatPricePipe } from '../../../pipes/format-price.pipe';
 import { CommonModule } from '@angular/common';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-cart-item',
@@ -43,7 +44,8 @@ export class CartItemComponent implements OnDestroy {
 
   constructor(
     private restService: RestService,
-    private appState: AppStateService
+    private appState: AppStateService,
+    private cartService: CartService
   ) { }
 
   updateCartItem() {
@@ -67,8 +69,13 @@ export class CartItemComponent implements OnDestroy {
           this.cartItem.totalPrice = response.body.data.totalPrice;
           this.cartItem.product = response.body.data.product;
 
-          // Update cart total in parent component
-          this.appState.controlCartUpdate.next(true);
+          // Update total cart quantity
+          this.cartService.getCart().subscribe((data) => {
+            const totalQuantity = data.data.cart
+              .map(item => item.quantity)
+              .reduce((acc, curr) => acc + curr, 0);
+            this.appState.updateCartCount(totalQuantity);
+          });
 
           console.log('Cart item updated successfully:', response.body.data);
         }
@@ -78,6 +85,9 @@ export class CartItemComponent implements OnDestroy {
         alert('Failed to update cart item');
       }
     });
+
+    // Subscribe to get the current value
+
   }
 
   deleteCartItem() {
@@ -85,11 +95,14 @@ export class CartItemComponent implements OnDestroy {
       next: (response) => {
         console.log('Cart item deleted successfully:', response);
         this.itemDeleted.emit(this.cartItemId);
-        
-        // Subscribe to get the current value
-        this.appState.cartCount$.subscribe(currentCount => {
-          this.appState.updateCartCount(currentCount - 1);
-        }).unsubscribe(); 
+
+        // Get updated cart to calculate total quantity
+        this.cartService.getCart().subscribe((data) => {
+          const totalQuantity = data.data.cart
+            .map(item => item.quantity)
+            .reduce((acc, curr) => acc + curr, 0);
+          this.appState.updateCartCount(totalQuantity);
+        });
       },
       error: (error) => {
         console.error('Error deleting cart item:', error);
