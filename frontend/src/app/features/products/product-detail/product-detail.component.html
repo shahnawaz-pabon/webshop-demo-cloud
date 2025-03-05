@@ -3,7 +3,17 @@
         <img [src]="product.getImageUrl()">
         <div id="product-info">
             <h1>{{ product.getTitle() }}</h1>
-            <button class="btn" (click)="saveCartItem(1)">Add to Cart</button>
+            <div class="cart-action">
+                <button class="btn" 
+                        (click)="saveCartItem(1)" 
+                        [disabled]="product.getQuantity() === 0"
+                        [title]="product.getQuantity() === 0 ? 'Out of stock' : 'Add to Cart'">
+                    Add to Cart
+                </button>
+                <div class="out-of-stock-badge" *ngIf="product.getQuantity() === 0">
+                    Out of Stock
+                </div>
+            </div>
             <p>{{ product.getPrice() | currency }}</p>
             <p>{{ product.getSummary() }}</p>
 
@@ -12,10 +22,10 @@
                     <span class="label">Stock Level:</span>
                     <span class="value">{{ quantity }}</span>
                 </div>
-                <div class="warning-container" *ngIf="quantity < 10">
+                <div class="warning-container" *ngIf="quantity <= 10">
                     <div class="low-stock-warning">
                         <i class="warning-icon">⚠️</i>
-                        Low stock! Please add more inventory.
+                        {{ quantity === 0 ? 'Product is out of stock! Please add inventory.' : 'Low stock! Please add more inventory.' }}
                     </div>
                 </div>
             </ng-container>
