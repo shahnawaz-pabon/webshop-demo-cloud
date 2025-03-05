@@ -6,7 +6,8 @@ export class PaginationUtils {
 
     static getSelectedPage(queryParams: Params): number {
         const page = queryParams['page'];
-        return page ? parseInt(page) : 1;
+     
+        return page ? parseInt(page) - 1 : 0;
     }
 
     static emitPaginationConfig(page: number, totalCount: number, subject: Subject<{ maxPage: number, currentPage: number }>): void {

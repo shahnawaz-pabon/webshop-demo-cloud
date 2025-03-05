@@ -107,7 +107,7 @@ export class AppStateService {
     }
 
     updateCartCount(count: number) {
-        console.log('Updating cart count to:', count);
+        // console.log('Updating cart count to:', count);
         this.cartCount.next(count);
     }
 

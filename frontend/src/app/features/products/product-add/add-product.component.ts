@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductUtils } from '../../../shared/utils/product.utils';
 import { AppStateService } from '../../../services/app-state.service';
-
+import { ProductService } from '../../../services/product.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-add-product',
   standalone: true,
@@ -19,13 +20,26 @@ export class AddProductComponent implements OnInit {
     summary: '',
     price: 0,
     description: '',
-    imageUrl: ''
+    imageUrl: '',
+    category: ''
   };
+
+  categories: string[] = [
+    'Electronics',
+    'Clothing',
+    'Books',
+    'Home & Garden',
+    'Sports',
+    'Toys',
+    'Other'
+  ];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private appState: AppStateService
+    private appState: AppStateService,
+    private productService: ProductService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -45,7 +59,8 @@ export class AddProductComponent implements OnInit {
         summary: product.getSummary(),
         price: product.getPrice(),
         description: product.getDescription(),
-        imageUrl: product.getImageUrl()
+        imageUrl: product.getImageUrl(),
+        category: product.getCategory()
       };
     }
   }
@@ -65,10 +80,17 @@ export class AddProductComponent implements OnInit {
     // Handle form submission based on mode
     if (this.isEditMode) {
       console.log('Updating product:', this.product);
+
       // Add your update logic here
     } else {
       console.log('Adding new product:', this.product);
-      // Add your create logic here
+
+      this.productService.createProduct(this.product).subscribe((response) => {
+        this.snackBar.open('Product created successfully', 'Close', {
+          duration: 2000
+        });
+        this.router.navigate(['/products']);
+      });
     }
   }
 } 

@@ -46,15 +46,15 @@ export class NavigationItemsComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit(): void {
     this.logState();
-    
+
     // Add debug logging for cart count
     this.cartCount$.subscribe(count => {
-        console.log('Current cart count:', count);
+      // console.log('Current cart count:', count);
     });
 
     if (!NavigationItemsComponent.controlCartRecovery_INIT) {
-        this.controlCartRecovery();
-        NavigationItemsComponent.controlCartRecovery_INIT = true;
+      this.controlCartRecovery();
+      NavigationItemsComponent.controlCartRecovery_INIT = true;
     }
 
     this.appState.logState();
