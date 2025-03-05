@@ -26,6 +26,7 @@ export interface Order {
   status: string;
   orderNumber: string | null;
   userData: any | null;
+  shipmentStatus: string;
 }
 
 export interface OrderResponse {
