@@ -83,6 +83,7 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderDate(LocalDateTime.now());
         order.setTotalAmount(totalAmount);
         order.setPaymentStatus("paid");
+        order.setOrderStatus("PENDING");
 
         // Save the order
         order = orderRepository.save(order);
@@ -192,9 +193,6 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus(newStatus);
         orderRepository.save(order);
 
-        // Send email notification
-        String subject = "Order Status Updated";
-        String text = "Your order (Number: " + order.getOrderNumber() + ") status has been updated to: " + newStatus;
-        emailService.sendEmail("s.pabon93@gmail.com", subject, text);
+        emailService.sendOrderTrackingEmail("s.pabon93@gmail.com", order.getOrderNumber(), order.getOrderDate().toLocalDate().toString(), newStatus);
     }
 }

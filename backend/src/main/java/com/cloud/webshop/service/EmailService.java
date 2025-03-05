@@ -1,13 +1,15 @@
 package com.cloud.webshop.service;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 @Service
 public class EmailService {
@@ -17,23 +19,35 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Value("${spring.mail.username}") private String sender;
-    @Value("${spring.mail.host}") private String host;
-    @Value("${spring.mail.port}") private String port;
+    @Autowired
+    private TemplateEngine templateEngine;
 
-    public void sendEmail(String to, String subject, String text) {
+    public void sendEmail(String to, String subject, String templateName, Context context) {
         try {
-            System.out.println("Sending email to " + host);
-            System.out.println("Sending email to " + port);
-            System.out.println("Sending email to " + sender);
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(to);
-            message.setSubject(subject);
-            message.setText(text);
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(to);
+            helper.setSubject(subject);
+
+            String htmlContent = templateEngine.process(templateName, context);
+            helper.setText(htmlContent, true);
+
             mailSender.send(message);
             logger.info("Email sent successfully to: {}", to);
-        } catch (MailException e) {
+        } catch (MessagingException e) {
             logger.error("Failed to send email: {}", e.getMessage(), e);
         }
+    }
+
+    public void sendOrderTrackingEmail(String to, String orderId, String orderDate, String orderStatus) {
+        Context context = new Context();
+        context.setVariable("name", "User");
+        context.setVariable("orderId", orderId);
+        context.setVariable("orderDate", orderDate);
+        context.setVariable("orderStatus", orderStatus);
+        context.setVariable("estimatedDelivery", "08-03-2025");
+
+        sendEmail(to, "Order Tracking Update", "order-tracking-email", context);
     }
 }

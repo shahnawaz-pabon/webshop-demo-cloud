@@ -22,18 +22,12 @@ spring:
     port: ${SPRING_MAIL_PORT}
     username: ${SPRING_MAIL_USERNAME}
     password: "${SPRING_MAIL_PASSWORD}"
-    protocol: smtp
     properties:
       mail:
         smtp:
           auth: true
-          ssl:
-            trust: smtp.gmail.com
           starttls:
             enable: true
-            required: true
-          connectiontimeout: 5000
-          debug: true
 
   springdoc:
     swagger-ui:

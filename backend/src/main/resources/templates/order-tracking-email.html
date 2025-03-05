@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Tracking Update</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+        .content {
+            padding: 20px 0;
+        }
+        .content h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .content p {
+            margin: 0 0 15px;
+            font-size: 16px;
+            color: #555;
+        }
+        .order-details {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .order-details p {
+            margin: 5px 0;
+        }
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 14px;
+            color: #777;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <!-- Header -->
+    <div class="header">
+        <h1>Order Tracking Update</h1>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <h2>Dear <span th:text="${name}">Customer</span>,</h2>
+        <p>We hope this message finds you well. Here is the latest update on your order:</p>
+
+        <!-- Order Details -->
+        <div class="order-details">
+            <p><strong>Order ID:</strong> <span th:text="${orderId}">#123456</span></p>
+            <p><strong>Order Date:</strong> <span th:text="${orderDate}">06-03-2025</span></p>
+            <p><strong>Current Status:</strong> <span th:text="${orderStatus}">On the Way</span></p>
+            <p><strong>Estimated Delivery:</strong> <span th:text="${estimatedDelivery}">07-03-2025</span></p>
+        </div>
+
+        <p>If you have any questions or need further assistance, please feel free to contact us at <a href="mailto:support@example.com">support@example.com</a>.</p>
+        <p>Thank you for choosing us. We appreciate your business!</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Best regards,</p>
+        <p><strong>The WebShop Team</strong></p>
+        <p><a href="https://www.example.com">www.example.com</a></p>
+    </div>
+</div>
+</body>
+</html>
