@@ -1,5 +1,4 @@
-<section id="product-details">
-
+<section id="product-details" *ngIf="product">
     <header>
         <img [src]="product.getImageUrl()">
         <div id="product-info">
@@ -8,16 +7,22 @@
             <p>{{ product.getPrice() | currency }}</p>
             <p>{{ product.getSummary() }}</p>
 
-    
-            <div class="detail-row" *ngIf="product.getQuantity() !== undefined">
-                <span class="label">Stock Level:</span>
-                <span class="value">{{ product.getQuantity() }}</span>
-            </div>
+            <ng-container *ngIf="product.getQuantity() as quantity">
+                <div class="detail-row">
+                    <span class="label">Stock Level:</span>
+                    <span class="value">{{ quantity }}</span>
+                </div>
+                <div class="warning-container" *ngIf="quantity < 10">
+                    <div class="low-stock-warning">
+                        <i class="warning-icon">⚠️</i>
+                        Low stock! Please add more inventory.
+                    </div>
+                </div>
+            </ng-container>
         </div>
     </header>
 
     <p id="product-description">{{ product.getDescription() }}</p>
-
 
     <div class="admin-actions">
         <button class="btn btn-update" (click)="updateInventory()">Update Inventory</button>
@@ -25,5 +30,4 @@
         <button class="btn btn-delete" (click)="deleteInventory()">Delete Inventory</button>
         <!-- <button class="btn btn-delete" (click)="deleteProduct()">Delete Product</button> -->
     </div>
-
 </section>

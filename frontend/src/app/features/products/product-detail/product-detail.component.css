@@ -101,3 +101,24 @@
 .value {
     color: #fff;
 }
+
+.warning-container {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: rgba(255, 68, 68, 0.1);
+    border-radius: 4px;
+    border-left: 4px solid #ff4444;
+}
+
+.low-stock-warning {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #ff4444;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.warning-icon {
+    font-style: normal;
+}
