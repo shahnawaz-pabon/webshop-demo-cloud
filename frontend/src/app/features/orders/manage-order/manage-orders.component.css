@@ -4,6 +4,20 @@
     margin: 0 auto;
   }
   
+  .no-orders {
+    text-align: center;
+    padding: 3rem;
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    margin: 2rem 0;
+  }
+  
+  .no-orders p {
+    color: #888;
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  
   h1 {
     color: #e5b80b;
     margin-bottom: 2rem;
