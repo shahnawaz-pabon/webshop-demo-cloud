@@ -11,6 +11,7 @@ import { PaginationUtils } from '../../../shared/utils/pagination.utils';
 import { FormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { Product } from '../../../model/product.model';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-product-list',
@@ -48,10 +49,19 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     public appState: AppStateService,
     private pageTitle: Title,
     private guardService: GuardService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private cartService: CartService
   ) { }
 
   ngOnInit(): void {
+    // Initialize cart count
+    this.cartService.getCart().subscribe((data) => {
+      const totalQuantity = data.data.cart
+        .map(item => item.quantity)
+        .reduce((acc, curr) => acc + curr, 0);
+      this.appState.updateCartCount(totalQuantity);
+    });
+
     // set title
     this.setTitles();
 
