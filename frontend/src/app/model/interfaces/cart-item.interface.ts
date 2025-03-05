@@ -5,7 +5,6 @@ export interface CartItem {
     product: Product;
     quantity: number;
     totalPrice: number;
-    cartId: number;
 }
 
 export interface CartItemResponse extends BaseResponse<CartItem> { }

@@ -8,7 +8,17 @@
             <span class="order-id">Order #{{ order.orderId }}</span>
             <span class="order-date">{{ order.formattedDate }} {{ order.formattedTime }}</span>
           </div>
-          <span class="order-status" [ngClass]="order.status.toLowerCase()">{{ order.status }}</span>
+          <div class="status-container">
+            <span class="order-status" [ngClass]="'paid'">{{ 'PAID' }}</span>
+            <select class="shipment-status" [(ngModel)]="order.shipmentStatus" [ngClass]="order.shipmentStatus">
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <button class="update-status-btn" (click)="onShipmentStatusChange(order)">Update Status</button>
+          </div>
         </div>
   
         <div class="order-items">
