@@ -45,6 +45,17 @@
           step="0.01"
           required>
       </div>
+
+      <div class="form-control">
+        <label for="imageUrl">Image URL</label>
+        <input 
+          type="text" 
+          id="imageUrl" 
+          name="imageUrl" 
+          [(ngModel)]="product.imageUrl"
+          required>
+      </div>
+      
   
       <div class="form-control">
         <label for="description">Description</label>
@@ -53,6 +64,20 @@
           name="description"
           [(ngModel)]="product.description"
           required></textarea>
+      </div>
+  
+      <div class="form-control">
+        <label for="category">Category</label>
+        <select 
+          id="category" 
+          name="category"
+          [(ngModel)]="product.category"
+          required>
+          <option value="">Select a category</option>
+          <option *ngFor="let category of categories" [value]="category">
+            {{category}}
+          </option>
+        </select>
       </div>
   
       <button type="submit" class="btn">

@@ -41,7 +41,7 @@ export class ProductDetailComponent implements OnInit, AfterViewInit, OnDestroy 
     private inventoryService: InventoryService,
     private dialog: MatDialog
   ) {
-    this.product = new Product(0, '', '', 0, '', '', 0);
+    this.product = new Product(0, '', '', 0, '', '', 0, '');
   }
 
   ngOnInit(): void {
@@ -98,6 +98,8 @@ export class ProductDetailComponent implements OnInit, AfterViewInit, OnDestroy 
         responseHandler.postCartItem_ERROR(httpErrorResponse);
       }
     });
+
+    this.router.navigate(['/products']);
 
     this.subscriptions.push(sub);
   }
@@ -156,6 +158,7 @@ export class ProductDetailComponent implements OnInit, AfterViewInit, OnDestroy 
             data.description,
             data.imageUrl,
             data.quantity || 0,
+            data.category,
             data.inventoryId
           );
           this.isLoading = false;

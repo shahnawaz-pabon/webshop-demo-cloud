@@ -8,6 +8,7 @@ export class Product {
         private description: string,
         private imageUrl: string,
         private quantity: number,
+        private category: string,
         private inventoryId?: number,
         private supplierId?: number
     ) { }
@@ -78,6 +79,14 @@ export class Product {
 
     setSupplierId(supplierId: number) {
         this.supplierId = supplierId;
+    }
+
+    getCategory(): string {
+        return this.category;
+    }
+
+    setCategory(category: string) {
+        this.category = category;
     }
 
 }
