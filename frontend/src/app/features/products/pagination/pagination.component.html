@@ -1,19 +1,15 @@
 <nav class="pagination" *ngIf="maxPage > 1">
-    <button (click)="onPreviousPage()" [disabled]="currentPage === 1">&lt;</button>
+    <!-- <button (click)="onPreviousPage()" [disabled]="currentPage === 1">&lt;</button> -->
   
     <ul>
-        <li>
-            <a [routerLink]="[]" [queryParams]="getPageQueryParam(1)" 
-               [class.active]="currentPage === 1">1</a>
-        </li>
-
-        <li *ngFor="let page of getArrayOfPages(); let i = index">
+        <li *ngFor="let page of getArrayOfPages()">
             <a [routerLink]="[]" 
-               [queryParams]="getPageQueryParam(i + 2)"
-               [class.active]="currentPage === i + 2">
-                {{ i + 2 }}
+               [queryParams]="getPageQueryParam(page)"
+               [class.active]="currentPage === page">
+                {{ page }}
             </a>
         </li>
     </ul>
-    <button (click)="onNextPage()" [disabled]="currentPage === maxPage">&gt;</button>
+<!-- 
+    <button (click)="onNextPage()" [disabled]="currentPage === maxPage">&gt;</button> -->
 </nav>

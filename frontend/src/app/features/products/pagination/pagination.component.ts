@@ -47,7 +47,7 @@ export class PaginationComponent implements OnInit, OnDestroy {
       (paginationConfig: { maxPage: number, currentPage: number }) => {
         console.log('Pagination config:', paginationConfig); // Debug log
         this.maxPage = paginationConfig.maxPage;
-        this.currentPage = paginationConfig.currentPage;
+        this.currentPage = paginationConfig.currentPage + 1;
       }
     );
 
@@ -73,6 +73,7 @@ export class PaginationComponent implements OnInit, OnDestroy {
   }
 
   updatePage() {
+    console.log('when do you call this? updatePage', this.currentPage);
     PaginationUtils.emitPaginationConfig(
       this.currentPage,
       this.appState.getProductsTotalCount(),
@@ -90,9 +91,7 @@ export class PaginationComponent implements OnInit, OnDestroy {
   }
 
   getArrayOfPages(): number[] {
-    console.log('Max page:', this.maxPage);
-    console.log('Current page:', this.currentPage);
-    return Array(this.maxPage - 1).fill(0).map((_, i) => i);
+    return Array(this.maxPage).fill(0).map((_, i) => i + 1);
   }
 
   getPageQueryParam(page: number): { page: number } {
@@ -123,9 +122,12 @@ export class PaginationComponent implements OnInit, OnDestroy {
   }
 
   loadProducts(): void {
-    this.restService.getProductRequestBuilder().getProducts(this.currentPage, 10)
+    console.log('loadProducts', this.currentPage);
+
+    this.restService.getProductRequestBuilder().getProducts(this.currentPage - 1, 10)
       .subscribe(
         response => {
+          console.log('loadProducts', this.currentPage);
           const products = response.body.data;
           this.products = products;
           this.maxPage = response.body.totalPages;

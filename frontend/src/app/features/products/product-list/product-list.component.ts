@@ -40,7 +40,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   minPrice: number = 0;
   maxPrice: number = 1000;
-
+  pageNumber: number = 0;
   isSearching: boolean = false;
 
   private priceChangeSubject = new Subject<void>();
@@ -64,10 +64,17 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // set title
     this.setTitles();
+    const sub = this.activatedRoute.queryParams.subscribe(
+      (queryParams: Params) => {
+        console.log('queryParams', queryParams);
+        this.pageNumber = queryParams['page'];
+      }
+    );
+    this.subscriptions.push(sub);
 
     // load initial products (page 1) with isAvailable as undefined
     const productSub = this.guardService.loadProducts(
-      0,
+      this.pageNumber - 1,
       this.appState.isUserAdmin(),
       undefined,
       undefined
@@ -139,8 +146,8 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleResponse(response: any) {
-    console.log('=== Response Debug ===');
-    console.log('Raw response:', response);
+    // console.log('=== Response Debug ===');
+    // console.log('Raw response:', response);
 
     if (response && response.data) {
       const products = response.data.map((item: any) => new Product(
@@ -155,7 +162,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
         item.supplierId
       ));
 
-      console.log('Mapped products:', products);
+      // console.log('Mapped products:', products);
       this.appState.setProductList(products);
 
       // Update pagination and total count
