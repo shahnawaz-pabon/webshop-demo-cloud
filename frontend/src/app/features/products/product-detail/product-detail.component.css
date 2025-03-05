@@ -89,13 +89,14 @@
 .detail-row {
     margin: 10px 0;
     display: flex;
-    gap: 10px;
+    gap: 5px;
+    align-items: center;
 }
 
 .label {
     font-weight: bold;
     color: #e5b80b;
-    min-width: 120px;
+    min-width: 85px;
 }
 
 .value {
