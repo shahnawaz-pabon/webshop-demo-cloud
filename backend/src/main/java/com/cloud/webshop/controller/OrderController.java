@@ -49,4 +49,18 @@ public class OrderController {
         );
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<ApiResponse<String>> updateOrderStatus(
+            @PathVariable Long orderId,
+            @RequestParam String status) {
+        orderService.updateOrderStatus(orderId, status);
+
+        ApiResponse<String> response = new ApiResponse<>(
+                "success",
+                "Order status updated successfully!",
+                ""
+        );
+        return ResponseEntity.ok(response);
+    }
 }

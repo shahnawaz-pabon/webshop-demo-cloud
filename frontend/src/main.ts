@@ -8,6 +8,7 @@ import { GuardService } from './app/services/guard.service';
 import { ErrorsHandlingService } from './app/services/errors-handling.service';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 bootstrapApplication(AppComponent, {
 
@@ -18,6 +19,6 @@ bootstrapApplication(AppComponent, {
     { provide: FirebaseService },
     { provide: RestService },
     { provide: GuardService },
-    { provide: ErrorsHandlingService }
+    { provide: ErrorsHandlingService }, provideAnimationsAsync()
   ]
 }).catch(err => console.error(err));

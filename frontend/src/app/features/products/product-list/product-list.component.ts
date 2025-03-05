@@ -11,6 +11,7 @@ import { PaginationUtils } from '../../../shared/utils/pagination.utils';
 import { FormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { Product } from '../../../model/product.model';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-product-list',
@@ -48,10 +49,19 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     public appState: AppStateService,
     private pageTitle: Title,
     private guardService: GuardService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private cartService: CartService
   ) { }
 
   ngOnInit(): void {
+    // Initialize cart count
+    this.cartService.getCart().subscribe((data) => {
+      const totalQuantity = data.data.cart
+        .map(item => item.quantity)
+        .reduce((acc, curr) => acc + curr, 0);
+      this.appState.updateCartCount(totalQuantity);
+    });
+
     // set title
     this.setTitles();
 
@@ -63,13 +73,8 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
       undefined
     ).subscribe({
       next: (response) => {
-        console.log('Full response structure:', JSON.stringify(response, null, 2));
-        console.log('Response type:', typeof response);
-        console.log('Response body:', response.body);
         if (response.body) {
           console.log('Body content:', response.body.content);
-          console.log('Total elements:', response.body.totalElements);
-          console.log('Total pages:', response.body.totalPages);
         }
         this.handleResponse(response.body);
       },
@@ -141,10 +146,13 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
       const products = response.data.map((item: any) => new Product(
         item.productId,
         item.title,
-        item.summary || '',
+        item.summary,
         item.price,
         item.description,
-        item.imageUrl || ''
+        item.imageUrl,
+        item.quantity,
+        item.inventoryId,
+        item.supplierId
       ));
 
       console.log('Mapped products:', products);

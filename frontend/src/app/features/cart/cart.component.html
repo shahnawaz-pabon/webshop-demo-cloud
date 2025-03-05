@@ -1,7 +1,10 @@
 <div class="cart-container">
     <h1>Your Cart</h1>
     <div *ngFor="let item of cart">
-        <app-cart-item [cartItem]="item"></app-cart-item>
+        <app-cart-item 
+            [cartItem]="item"
+            (itemDeleted)="handleItemDeleted($event)">
+        </app-cart-item>
     </div>
     <div class="cart-total">
         <h3>Total Price: ${{ totalPrice }}</h3>

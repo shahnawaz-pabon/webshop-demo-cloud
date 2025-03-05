@@ -1,3 +1,5 @@
+import { BaseResponse } from './base-response.interface';
+
 export interface Product {
     productId: number;
     title: string;
@@ -5,10 +7,10 @@ export interface Product {
     price: number;
     description: string;
     imageUrl: string;
-} 
-export interface ProductResponse {
-    data: Product[];
-    page: number;
-    totalItems: number;
-    totalPages: number;
+    category: string;
+    quantity?: number;
+    inventoryId?: number;
 }
+
+export interface ProductResponse extends BaseResponse<Product> { }
+export interface ProductListResponse extends BaseResponse<Product[]> { }

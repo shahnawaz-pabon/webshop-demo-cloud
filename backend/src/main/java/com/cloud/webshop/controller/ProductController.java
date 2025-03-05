@@ -2,6 +2,7 @@ package com.cloud.webshop.controller;
 
 import com.cloud.webshop.model.Product;
 import com.cloud.webshop.request.ProductRequest;
+import com.cloud.webshop.response.MinMaxResponse;
 import com.cloud.webshop.response.ProductNameResponse;
 import com.cloud.webshop.response.ProductResponse;
 import com.cloud.webshop.response.ApiResponse;
@@ -33,8 +34,10 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false, defaultValue = "false") boolean isAvailable) {
-        ApiResponse<List<ProductResponse>> response = productService.getAllProducts(page, size, keyword, isAvailable);
+            @RequestParam(required = false, defaultValue = "false") boolean isAvailable,
+            @RequestParam(required = false) Integer minPrice,
+            @RequestParam(required = false) Integer maxPrice) {
+        ApiResponse<List<ProductResponse>> response = productService.getAllProducts(page, size, keyword, isAvailable, minPrice, maxPrice);
         return ResponseEntity.ok(response);
     }
 
@@ -81,6 +84,21 @@ public class ProductController {
                 products
         );
 
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/price/min-max")
+    @Operation(
+            summary = "Get min and max price",
+            description = "Get min and max price from all products."
+    )
+    public ResponseEntity<ApiResponse<MinMaxResponse>> getMinMaxValues() {
+        MinMaxResponse minMaxResponse = productService.getMinMaxValues();
+        ApiResponse<MinMaxResponse> response = new ApiResponse<>(
+                "success",
+                "Min and max values retrieved successfully",
+                minMaxResponse
+        );
         return ResponseEntity.ok(response);
     }
 }
