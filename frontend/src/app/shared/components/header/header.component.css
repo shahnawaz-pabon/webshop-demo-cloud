@@ -22,6 +22,7 @@
 #logo {
   font-weight: bold;
   font-size: 2rem;
+  margin-right: 2rem;
 }
 
 #main-header nav {
@@ -81,6 +82,7 @@
 }
 
 #back-arrow-btn {
+  margin-right: 0.5rem;
   background-color: transparent;
   border: none;
   cursor: pointer;
