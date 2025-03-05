@@ -29,4 +29,17 @@ export class OrderService {
   getOrderHistory(userId: number): Observable<OrderHistoryResponse> {
     return this.http.get<OrderHistoryResponse>(`${this.baseUrl}/order/history?userId=${userId}`);
   }
+
+  updateOrderStatus(orderId: number, status: string): Observable<ApiResponse<any>> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+
+    return this.http.put<ApiResponse<any>>(
+      `${this.baseUrl}/order/${orderId}/status?status=${status}`,
+      null,
+      { headers }
+    );
+  }
 } 
