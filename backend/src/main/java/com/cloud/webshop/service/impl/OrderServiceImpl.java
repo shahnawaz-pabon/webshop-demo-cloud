@@ -5,6 +5,7 @@ import com.cloud.webshop.repository.*;
 import com.cloud.webshop.response.CartItemResponse;
 import com.cloud.webshop.response.OrderHistoryResponse;
 import com.cloud.webshop.response.ProductResponse;
+import com.cloud.webshop.service.EmailService;
 import com.cloud.webshop.service.OrderService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     @Transactional
@@ -137,7 +141,8 @@ public class OrderServiceImpl implements OrderService {
         response.setOrderId(order.getOrderId());
         response.setFormattedDate(order.getOrderDate().toLocalDate().toString()); // Format date
         response.setFormattedTime(order.getOrderDate().toLocalTime().toString()); // Format time
-        response.setStatus(order.getPaymentStatus());
+        response.setStatus(order.getOrderStatus());
+        response.setOrderNumber(order.getOrderNumber());
 
         // Map order products to CartItemResponse
         List<CartItemResponse> cartItems = order.getOrderProducts().stream()
@@ -177,5 +182,19 @@ public class OrderServiceImpl implements OrderService {
         response.setDescription(product.getDescription());
         response.setImageUrl(product.getImageUrl());
         return response;
+    }
+
+    public void updateOrderStatus(Long orderId, String newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // Update the status
+        order.setOrderStatus(newStatus);
+        orderRepository.save(order);
+
+        // Send email notification
+        String subject = "Order Status Updated";
+        String text = "Your order (Number: " + order.getOrderNumber() + ") status has been updated to: " + newStatus;
+        emailService.sendEmail("s.pabon93@gmail.com", subject, text);
     }
 }

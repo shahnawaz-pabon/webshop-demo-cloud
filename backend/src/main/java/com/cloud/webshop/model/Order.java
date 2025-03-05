@@ -6,6 +6,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -27,6 +28,20 @@ public class Order {
 
     @Column(name = "payment_status", length = 50)
     private String paymentStatus;
+
+    @Column(name = "order_status", length = 50)
+    private String orderStatus;
+
+    @Column(name = "order_number", unique = true, nullable = false)
+    private String orderNumber;
+
+    // Automatically generate UUID before persisting the entity
+    @PrePersist
+    public void generateOrderNumber() {
+        if (this.orderNumber == null) {
+            this.orderNumber = UUID.randomUUID().toString();
+        }
+    }
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> orderProducts;
