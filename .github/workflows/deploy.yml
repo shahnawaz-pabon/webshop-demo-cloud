@@ -28,7 +28,7 @@ jobs:
           git pull origin main
           
           # Stop and remove existing containers
-          docker-compose down
+          docker compose down
           
           # Remove old images (optional)
           docker image prune -f
