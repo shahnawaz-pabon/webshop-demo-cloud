@@ -46,7 +46,7 @@ public class EmailService {
         context.setVariable("orderId", orderId);
         context.setVariable("orderDate", orderDate);
         context.setVariable("orderStatus", orderStatus);
-        context.setVariable("estimatedDelivery", "08-03-2025");
+        context.setVariable("estimatedDelivery", "2025-03-08");
 
         sendEmail(to, "Order Tracking Update", "order-tracking-email", context);
     }

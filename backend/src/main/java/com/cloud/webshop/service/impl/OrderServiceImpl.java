@@ -123,6 +123,8 @@ public class OrderServiceImpl implements OrderService {
         // Clear the user's cart
         cartRepository.deleteByUserId(userId);
 
+        emailService.sendOrderTrackingEmail("s.pabon93@gmail.com", order.getOrderNumber(), order.getOrderDate().toLocalDate().toString(), "PENDING");
+
         return order;
     }
 
@@ -193,6 +195,7 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus(newStatus);
         orderRepository.save(order);
 
+        // sending email
         emailService.sendOrderTrackingEmail("s.pabon93@gmail.com", order.getOrderNumber(), order.getOrderDate().toLocalDate().toString(), newStatus);
     }
 }
