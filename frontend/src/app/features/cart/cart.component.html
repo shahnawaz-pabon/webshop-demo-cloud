@@ -1,13 +1,18 @@
 <div class="cart-container">
     <h1>Your Cart</h1>
-    <div *ngFor="let item of cart">
-        <app-cart-item 
-            [cartItem]="item"
-            (itemDeleted)="handleItemDeleted($event)">
-        </app-cart-item>
+    <div *ngIf="cart.length === 0" class="empty-cart">
+        <p>Your cart is empty. Browse our products to add items to your cart!</p>
     </div>
-    <div class="cart-total">
-        <h3>Total Price: ${{ totalPrice }}</h3>
+    <div *ngIf="cart.length > 0">
+        <div *ngFor="let item of cart">
+            <app-cart-item 
+                [cartItem]="item"
+                (itemDeleted)="handleItemDeleted($event)">
+            </app-cart-item>
+        </div>
+        <div class="cart-total">
+            <h3>Total Price: ${{ totalPrice }}</h3>
+        </div>
+        <button (click)="handleBuyProducts()">Buy Products</button>
     </div>
-    <button (click)="handleBuyProducts()">Buy Products</button>
 </div>
