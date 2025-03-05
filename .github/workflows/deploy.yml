@@ -22,22 +22,22 @@ jobs:
         script: |
           # Navigate to the project directory
           cd ~/webshop-demo-cloud || git clone https://github.com/shahnawaz-pabon/webshop-demo-cloud.git && cd ~/webshop-demo-cloud
-          
-          # Pull the latest changes
+
+          # Pull latest changes
           git checkout main
           git pull origin main
           
-          # Stop and remove existing containers
+          # ✅ Restart Backend (first)
+          cd backend
           docker compose down
+          docker compose build
+          docker compose up -d
           
-          # Remove old images (optional)
-          docker image prune -f
-          
-          # Build and start the backend first
-          docker compose up --build -d backend
-          
-          # Wait for the backend to be fully up
+          # Wait for backend to be fully up
           sleep 10
           
-          # Start the frontend after the backend
-          docker compose up --build -d frontend
+          # ✅ Restart Frontend (after backend)
+          cd ../frontend
+          docker compose down
+          docker compose build
+          docker compose up -d
