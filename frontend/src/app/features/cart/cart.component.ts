@@ -8,16 +8,18 @@ import { CartItemComponent } from './cart-item/cart-item.component';
 import { CartItem } from '../../model/interfaces/cart-item.interface';
 import { Product } from '../../model/interfaces/product.interface';
 import { ShoppingCart } from '../../model/interfaces/shopping-cart.interface';
-import { RestService } from '../../services/rest.service';
 import { AppStateService } from '../../services/app-state.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { OrderService } from '../../services/order.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
-  imports: [CommonModule, CartItemComponent],
+  imports: [CommonModule, CartItemComponent, MatSnackBarModule, MatIconModule],
 })
 export class CartComponent implements OnInit {
   cart: CartItem[] = [];
@@ -31,8 +33,9 @@ export class CartComponent implements OnInit {
     private cartService: CartService,
     private route: ActivatedRoute,
     private router: Router,
-    private restService: RestService,
-    private appState: AppStateService
+    private appState: AppStateService,
+    private orderService: OrderService,
+    private snackBar: MatSnackBar
   ) {
     this.stripePromise = loadStripe(this.stripePublicKey);
   }
@@ -42,10 +45,9 @@ export class CartComponent implements OnInit {
       this.cart = data.data.cart;
       this.totalPrice = data.data.totalPrice;
       this.totalLength = data.data.totalLength || 0;
-         // Update the cart count in AppState
+      // Update the cart count in AppState
       const cartCount = this.cart.map(item => item.quantity).reduce((acc, curr) => acc + curr, 0);
-       this.appState.updateCartCount(cartCount);
-     
+      this.appState.updateCartCount(cartCount);
     });
 
     // Handle payment success/cancel scenarios
@@ -110,19 +112,47 @@ export class CartComponent implements OnInit {
   }
 
   handlePaymentSuccess(): void {
-    alert('Payment successful! Thank you for your purchase.');
-    // Clear the cart
-    // this.cartService.clearCart();
-    this.router.navigate(['/cart'], { queryParams: {} });
+    // For now, we'll use userId 1 as that's what's used in the cart service
+    const userId = 1;
+    
+    this.orderService.createOrder(userId).subscribe({
+      next: (response) => {
+        this.snackBar.open('🎉 Payment successful! Thank you for your purchase.', 'Close', {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar'],
+          politeness: 'polite'
+        });
+        this.appState.updateCartCount(0);
+        this.router.navigate(['/'], { queryParams: {} });
+      },
+      error: (error) => {
+        console.error('Error creating order:', error);
+        this.snackBar.open('❌ Payment was successful but there was an error creating your order. Please contact support.', 'Close', {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar'],
+          politeness: 'polite'
+        });
+        this.router.navigate(['/cart'], { queryParams: {} });
+      }
+    });
   }
 
   handlePaymentCancel(): void {
-    alert('Payment was canceled. Please try again.');
+    this.snackBar.open('❌ Payment was canceled. Please try again.', 'Close', {
+      duration: 5000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['error-snackbar'],
+      politeness: 'polite'
+    });
     this.router.navigate(['/cart'], { queryParams: {} });
   }
 
   handleItemDeleted(cartItemId: number) {
-
     this.cart = this.cart.filter(item => item.cartId !== cartItemId);
     // Update total price
     this.calculateTotalPrice();
