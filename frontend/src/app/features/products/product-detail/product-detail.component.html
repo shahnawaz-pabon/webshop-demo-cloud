@@ -4,7 +4,12 @@
         <img [src]="product.getImageUrl()">
         <div id="product-info">
             <h1>{{ product.getTitle() }}</h1>
-            <button class="btn" (click)="saveCartItem(1)">Add to Cart</button>
+            <button 
+                class="btn" 
+                (click)="saveCartItem(1)"
+                [disabled]="product.getQuantity() === 0">
+                Add to Cart
+            </button>
             <p>{{ product.getPrice() | currency }}</p>
             <p>{{ product.getSummary() }}</p>
 
