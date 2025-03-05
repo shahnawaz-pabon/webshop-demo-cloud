@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface ProductService {
     Optional<Product> getProductById(Long id);
-    ApiResponse<List<ProductResponse>> getAllProducts(int page, int size, String keyword, boolean isAvailable);
+    ApiResponse<List<ProductResponse>> getAllProducts(int page, int size, String keyword, boolean isAvailable, Integer minPrice, Integer maxPrice);
     ProductResponse addProduct(ProductRequest request);
     List<ProductNameResponse> getProductList();
     MinMaxResponse getMinMaxValues();

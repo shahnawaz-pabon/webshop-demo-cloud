@@ -34,8 +34,10 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false, defaultValue = "false") boolean isAvailable) {
-        ApiResponse<List<ProductResponse>> response = productService.getAllProducts(page, size, keyword, isAvailable);
+            @RequestParam(required = false, defaultValue = "false") boolean isAvailable,
+            @RequestParam(required = false) Integer minPrice,
+            @RequestParam(required = false) Integer maxPrice) {
+        ApiResponse<List<ProductResponse>> response = productService.getAllProducts(page, size, keyword, isAvailable, minPrice, maxPrice);
         return ResponseEntity.ok(response);
     }
 
