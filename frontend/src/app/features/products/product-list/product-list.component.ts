@@ -64,38 +64,59 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // set title
     this.setTitles();
+
+    // Single subscription to handle all query param changes
     const sub = this.activatedRoute.queryParams.subscribe(
       (queryParams: Params) => {
-        console.log('queryParams', queryParams);
-        this.pageNumber = queryParams['page'];
+        if (!this.componentLoaded) {
+          // Initial load
+          this.pageNumber = parseInt(queryParams['page'] || '1');
+          
+          const productSub = this.guardService.loadProducts(
+            Math.max(0, this.pageNumber - 1), // Ensure we don't go below 0
+            this.appState.isUserAdmin(),
+            undefined,
+            undefined,
+            undefined,
+            undefined
+          ).subscribe({
+            next: (response) => {
+              this.handleResponse(response.body);
+            },
+            error: (error) => {
+              console.error('Error loading products:', error);
+            }
+          });
+          this.subscriptions.push(productSub);
+        } else {
+          // Subsequent page changes
+          let page = parseInt(queryParams['page'] || '1');
+          if (isNaN(page)) page = 1;
+
+          const availableFlag = this.isAvailable ? true : undefined;
+          const currentMinPrice = this.minPrice !== 0 ? this.minPrice : undefined;
+          const currentMaxPrice = this.maxPrice !== 1000 ? this.maxPrice : undefined;
+
+          const productSub = this.guardService.loadProducts(
+            Math.max(0, page - 1), // Ensure we don't go below 0
+            this.appState.isUserAdmin(),
+            this.searchKeyword,
+            availableFlag,
+            currentMinPrice,
+            currentMaxPrice
+          ).subscribe({
+            next: (response) => {
+              this.handleResponse(response.body);
+            }
+          });
+          this.guardService.addSubscriptionFromOutside(productSub);
+        }
       }
     );
     this.subscriptions.push(sub);
 
-    // load initial products (page 1) with isAvailable as undefined
-    const productSub = this.guardService.loadProducts(
-      this.pageNumber - 1,
-      this.appState.isUserAdmin(),
-      undefined,
-      undefined
-    ).subscribe({
-      next: (response) => {
-        if (response.body) {
-          console.log('Body content:', response.body.content);
-        }
-        this.handleResponse(response.body);
-      },
-      error: (error) => {
-        console.error('Error loading products:', error);
-      }
-    });
-    this.subscriptions.push(productSub);
-
-    // listen on query params (selected page)
-    this.handleSelectedPage();
-
     this.priceChangeSubject.pipe(
-      debounceTime(500)  // Wait 500ms after last change
+      debounceTime(500)
     ).subscribe(() => {
       this.executeSearch();
     });
@@ -107,29 +128,6 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     //component
     this.componentLoaded = true;
-  }
-
-  handleSelectedPage() {
-    const sub = this.activatedRoute.queryParams.subscribe(
-      (queryParams: Params) => {
-        if (this.componentLoaded) {
-          const page = PaginationUtils.getSelectedPage(queryParams);
-
-          const productSub = this.guardService.loadProducts(
-            page,
-            this.appState.isUserAdmin(),
-            this.searchKeyword,
-            this.isAvailable ? true : undefined
-          ).subscribe({
-            next: (response) => {
-              this.handleResponse(response.body);
-            }
-          });
-          this.guardService.addSubscriptionFromOutside(productSub);
-        }
-      }
-    );
-    this.subscriptions.push(sub);
   }
 
   setTitles() {
@@ -146,9 +144,6 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleResponse(response: any) {
-    // console.log('=== Response Debug ===');
-    // console.log('Raw response:', response);
-
     if (response && response.data) {
       const products = response.data.map((item: any) => new Product(
         item.productId,
@@ -162,10 +157,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
         item.supplierId
       ));
 
-      // console.log('Mapped products:', products);
       this.appState.setProductList(products);
-
-      // Update pagination and total count
       this.appState.setProductsTotalCount(response.totalItems);
       this.appState.controlPagination.next({
         maxPage: response.totalPages,
@@ -183,14 +175,16 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   executeSearch() {
     this.isSearching = true;
-    const page = 0;
+    const page = 0;  // Search always starts at first page
     const availableFlag = this.isAvailable ? true : undefined;
 
     this.guardService.loadProducts(
-      page,
+      page,  // Already 0-based for API
       this.appState.isUserAdmin(),
       this.searchKeyword,
-      availableFlag
+      availableFlag,
+      this.minPrice,
+      this.maxPrice
     ).subscribe({
       next: (response) => {
         this.handleResponse(response.body);

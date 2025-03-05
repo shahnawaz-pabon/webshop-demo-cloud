@@ -21,9 +21,9 @@ export class GuardService {
         return true; // Add your guard logic here
     }
 
-    loadProducts(page: number, isAdmin: boolean, searchKeyword?: string, isAvailable?: boolean): Observable<any> {
+    loadProducts(page: number, isAdmin: boolean, searchKeyword?: string, isAvailable?: boolean, minPrice?: number, maxPrice?: number): Observable<any> {
         // Different URL and parameters for initial load vs search
-        if (!searchKeyword && isAvailable === undefined) {
+        if (!searchKeyword && isAvailable === undefined && !minPrice && !maxPrice) {
             // Initial load - use default pagination and isAvailable=false
             return this.http.get<ProductListResponse>(
                 `${this.apiUrl}/product/list?page=${page}&size=10&isAvailable=false`, {
@@ -40,6 +40,17 @@ export class GuardService {
 
             if (isAvailable === true) {
                 url += `&isAvailable=true`;
+            } else {
+                url += `&isAvailable=false`;
+            }
+
+            // Add price filter parameters
+            if (minPrice !== undefined) {
+                url += `&minPrice=${minPrice}`;
+            }
+
+            if (maxPrice !== undefined) {
+                url += `&maxPrice=${maxPrice}`;
             }
 
             return this.http.get(url, {
