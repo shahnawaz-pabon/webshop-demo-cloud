@@ -9,4 +9,5 @@ import java.util.List;
 public interface OrderService {
     Order createOrder(Long userId);
     List<OrderHistoryResponse> getOrderHistory(Long userId);
+    void updateOrderStatus(Long orderId, String newStatus);
 }

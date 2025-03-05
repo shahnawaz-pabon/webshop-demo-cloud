@@ -5,6 +5,7 @@ import com.cloud.webshop.model.Product;
 import com.cloud.webshop.repository.InventoryRepository;
 import com.cloud.webshop.repository.ProductRepository;
 import com.cloud.webshop.response.ApiResponse;
+import com.cloud.webshop.response.MinMaxResponse;
 import com.cloud.webshop.response.ProductNameResponse;
 import com.cloud.webshop.response.ProductResponse;
 import com.cloud.webshop.service.ProductService;
@@ -35,17 +36,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ApiResponse<List<ProductResponse>> getAllProducts(int page, int size, String keyword, boolean isAvailable) {
+    public ApiResponse<List<ProductResponse>> getAllProducts(
+            int page, int size, String keyword, boolean isAvailable, Integer minPrice, Integer maxPrice) {
         // Create a Pageable object for pagination
         Pageable pageable = PageRequest.of(page, size);
 
-        // Fetch products with keyword search (if provided)
-        Page<Product> productPage;
-        if (keyword != null && !keyword.isEmpty()) {
-            productPage = productRepository.findByTitleContainingOrCategoryContaining(keyword, pageable);
-        } else {
-            productPage = productRepository.findAll(pageable);
-        }
+        // Convert minPrice and maxPrice to Double
+        Double minPriceDouble = minPrice != null ? minPrice.doubleValue() : null;
+        Double maxPriceDouble = maxPrice != null ? maxPrice.doubleValue() : null;
+
+        // Fetch products with keyword, price, and availability filters
+        Page<Product> productPage = productRepository.findByFilters(
+                keyword, minPriceDouble, maxPriceDouble, isAvailable, pageable
+        );
 
         // Map products to ProductResponse with available quantity and inventory details
         List<ProductResponse> productResponses = productPage.getContent().stream()
@@ -57,11 +60,6 @@ public class ProductServiceImpl implements ProductService {
                     int availableQuantity = inventories.stream()
                             .mapToInt(Inventory::getStockLevel)
                             .sum();
-
-                    // Skip products with no inventory if isAvailable is true
-                    if (isAvailable && availableQuantity <= 0) {
-                        return null; // Skip products with no inventory
-                    }
 
                     // Create ProductResponse
                     ProductResponse response = ProductResponse.toProductResponse(product);
@@ -76,7 +74,6 @@ public class ProductServiceImpl implements ProductService {
 
                     return response;
                 })
-                .filter(Objects::nonNull) // Remove null entries (products skipped due to isAvailable)
                 .collect(Collectors.toList());
 
         // Create a custom page for the results
@@ -125,6 +122,20 @@ public class ProductServiceImpl implements ProductService {
         return products.stream()
                 .map(ProductNameResponse::toProductResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MinMaxResponse getMinMaxValues() {
+        // Fetch min and max prices from the database
+        Double minPrice = productRepository.findMinPrice();
+        Double maxPrice = productRepository.findMaxPrice();
+
+        // Create the response
+        MinMaxResponse response = new MinMaxResponse();
+        response.setMinValue((int) (minPrice != null ? minPrice : 0));
+        response.setMaxValue((int) (maxPrice != null ? maxPrice : 0));
+
+        return response;
     }
 }
 
