@@ -11,6 +11,16 @@
 - **Database:** MySQL.
 - **Tools:** Docker and Docker Compose used for containerization.
 
+## Demo URLs
+
+### Frontend Url
+
+- [https://webshop-demo.westeurope.cloudapp.azure.com/](https://webshop-demo.westeurope.cloudapp.azure.com/)
+
+### Backend Url
+
+- [https://webshop-demo.westeurope.cloudapp.azure.com:8082/swagger-ui/index.html](https://webshop-demo.westeurope.cloudapp.azure.com:8082/swagger-ui/index.html)
+
 ## Up and Run 
 
 Clone the repository and run the backend:
