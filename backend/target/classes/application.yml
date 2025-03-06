@@ -1,6 +1,11 @@
 server:
-  port: ${SERVER_PORT:8080}
-
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: /etc/letsencrypt/live/webshop-demo.westeurope.cloudapp.azure.com/keystore.p12
+    key-store-password: changeit
+    key-store-type: PKCS12
+    key-alias: webshop-demo
 spring:
   config:
     import: optional:file:.env[active=dev]

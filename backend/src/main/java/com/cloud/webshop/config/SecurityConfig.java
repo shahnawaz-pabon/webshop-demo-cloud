@@ -11,6 +11,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .requiresChannel(channel ->
+                        channel
+                                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+                                .requiresSecure()
+                )
                 .authorizeHttpRequests(auth -> auth
                         // Allow access to Swagger UI and API docs
                         .requestMatchers(

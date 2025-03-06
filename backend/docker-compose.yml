@@ -16,12 +16,17 @@ services:
       dockerfile: Dockerfile
     network_mode: host
     container_name: webshop_app
+    ports:
+      - "8082:8082"
+      - "8443:8443"
     depends_on:
       - db
     env_file:
       - .env
     environment:
       - SERVER_PORT=8082  # Override the default port when running in Docker
+    volumes:
+      - /etc/letsencrypt/live/webshop-demo.westeurope.cloudapp.azure.com/keystore.p12:/etc/letsencrypt/live/webshop-demo.westeurope.cloudapp.azure.com/keystore.p12
 
 volumes:
   db_data:
