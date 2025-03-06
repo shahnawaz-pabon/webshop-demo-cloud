@@ -34,7 +34,7 @@ public class InventoryMonitoringService {
         
         if (!lowStockInventory.isEmpty()) {
             logger.warn("Found {} products with low stock", lowStockInventory.size());
-            sendLowStockNotification(lowStockInventory);
+//            sendLowStockNotification(lowStockInventory);
         } else {
             logger.info("No products with low stock found");
         }
