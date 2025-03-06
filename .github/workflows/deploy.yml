@@ -1,0 +1,43 @@
+name: Deploy to Azure VM
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # ✅ Checkout Repository
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # ✅ Deploy to Azure VM
+    - name: SSH into Azure VM and deploy
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.AZURE_HOST }}
+        username: ${{ secrets.AZURE_USER }}
+        key: ${{ secrets.AZURE_SSH_KEY }}
+        script: |
+          # Navigate to the project directory
+          cd ~/webshop-demo-cloud || git clone https://github.com/shahnawaz-pabon/webshop-demo-cloud.git && cd ~/webshop-demo-cloud
+
+          # Pull latest changes
+          git checkout main
+          git pull origin main
+          
+          # ✅ Restart Backend (first)
+          cd backend
+          docker compose down
+          docker compose build
+          docker compose up -d
+          
+          # Wait for backend to be fully up
+          sleep 10
+          
+          # ✅ Restart Frontend (after backend)
+          cd ../frontend
+          docker compose down
+          docker compose build
+          docker compose up -d
