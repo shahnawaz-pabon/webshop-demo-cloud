@@ -93,7 +93,7 @@ export class RestService {
     getProductRequestBuilder(): ProductRequestBuilder {
         return {
             getProducts: (page: number, size: number = 10, keyword?: string, isAvailable: boolean = true): Observable<HttpResponse<any>> => {
-                let url = `${this.baseUrl}/products/list?page=${page}&size=${size}`;
+                let url = `${this.baseUrl}/product/list?page=${page}&size=${size}`;
 
                 if (keyword) {
                     url += `&keyword=${keyword}`;
@@ -108,7 +108,7 @@ export class RestService {
                 });
             },
             deleteProductById: (productId: number) =>
-                this.http.delete<{ productId: number }>(`${this.baseUrl}/products/${productId}`, { observe: 'response' })
+                this.http.delete<{ productId: number }>(`${this.baseUrl}/product/${productId}`, { observe: 'response' })
         };
     }
 
