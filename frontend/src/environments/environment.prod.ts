@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiBaseUrl: 'https://api.ecommerce-demo.lullabydevhub.com'
+     apiBaseUrl: 'http://48.209.87.208:8082/api/v1'
 }; 
