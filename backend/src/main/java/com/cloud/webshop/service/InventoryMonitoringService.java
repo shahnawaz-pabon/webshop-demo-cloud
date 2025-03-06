@@ -30,7 +30,7 @@ public class InventoryMonitoringService {
     public void checkLowInventoryLevels() {
         logger.info("Starting inventory check at: {}", LocalDateTime.now().format(formatter));
         
-        List<Inventory> lowStockInventory = inventoryRepository.findByStockLevelLessThan(10);
+        List<Inventory> lowStockInventory = inventoryRepository.findByStockLevelLessThan(11);
         
         if (!lowStockInventory.isEmpty()) {
             logger.warn("Found {} products with low stock", lowStockInventory.size());
