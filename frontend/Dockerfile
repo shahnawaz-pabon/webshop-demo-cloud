@@ -10,7 +10,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Debug: Show the output directory
+# Debug: Show the output directory (to confirm files exist)
 RUN ls -la dist/
 RUN ls -la dist/*/
 
@@ -26,6 +26,7 @@ COPY --from=build /app/dist/cloud-frontend/browser /usr/share/nginx/html
 # Copy the custom Nginx config for HTTPS support
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80 443  # Expose both HTTP and HTTPS ports
+# Expose both HTTP and HTTPS ports
+EXPOSE 80 443
 
 CMD ["nginx", "-g", "daemon off;"]
