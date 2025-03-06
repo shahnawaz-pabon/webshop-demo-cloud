@@ -95,7 +95,7 @@ export class CartComponent implements OnInit {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Bearer ${this.stripeSecretKey}`,
+          Authorization: `Bearer sk_test_Y17KokhC3SRYCQTLYiU5ZCD2`,
         },
         body: body,
       }).then((res) => res.json());

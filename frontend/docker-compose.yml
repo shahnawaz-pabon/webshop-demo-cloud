@@ -5,4 +5,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt/live/webshop-demo.westeurope.cloudapp.azure.com/fullchain.pem:/etc/nginx/certs/fullchain.pem
+      - /etc/letsencrypt/live/webshop-demo.westeurope.cloudapp.azure.com/privkey.pem:/etc/nginx/certs/privkey.pem
     restart: always
