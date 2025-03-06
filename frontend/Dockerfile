@@ -17,16 +17,21 @@ RUN ls -la dist/*/
 # Production Stage
 FROM nginx:alpine
 
-# Remove default Nginx config
+# Install Certbot and Nginx SSL configuration
+RUN apk update && apk add certbot nginx
+
+# Remove default Nginx configuration
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Copy the built frontend app to Nginx public directory
+# Copy your frontend build files
 COPY --from=build /app/dist/cloud-frontend/browser /usr/share/nginx/html
 
-# Copy the custom Nginx config for HTTPS support
+# Copy the custom Nginx configuration for HTTPS
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose both HTTP and HTTPS ports
+# Expose HTTP and HTTPS ports
 EXPOSE 80 443
 
+# Run Nginx
 CMD ["nginx", "-g", "daemon off;"]
+
