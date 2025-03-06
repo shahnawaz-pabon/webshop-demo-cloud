@@ -91,11 +91,6 @@ export class CartComponent implements OnInit {
     try {
       const body = new URLSearchParams(sessionData).toString();
 
-      console.log("this.stripeSecretKey>>>>>>>>>>>>>>>>>");
-      console.log(this.stripeSecretKey);
-      console.log(env.STRIPE_PUBLIC_KEY);
-      console.log(env.STRIPE_SECRET_KEY);
-
       const session = await fetch('https://api.stripe.com/v1/checkout/sessions', {
         method: 'POST',
         headers: {
